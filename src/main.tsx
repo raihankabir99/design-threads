@@ -38,6 +38,7 @@ const WishlistPage = lazy(() => import("./pages/Wishlist.tsx"));
 const Account = lazy(() => import("./pages/Account.tsx"));
 const CartPage = lazy(() => import("./pages/Cart.tsx"));
 const Checkout = lazy(() => import("./pages/Checkout.tsx"));
+const OrderConfirmation = lazy(() => import("./pages/OrderConfirmation.tsx"));
 const CategoryPage = lazy(() => import("./pages/CategoryPage.tsx"));
 
 // Simple loading fallback for route transitions
@@ -183,6 +184,7 @@ createRoot(document.getElementById("root")!).render(
                   <Route path="/account" element={<Account />} />
                   <Route path="/cart" element={<CartPage />} />
                   <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/order-confirmation" element={<OrderConfirmation />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
