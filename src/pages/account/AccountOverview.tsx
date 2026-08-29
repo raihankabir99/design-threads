@@ -1,32 +1,15 @@
 import { Link } from "react-router";
-import { Package, Heart, MapPin, Settings, ArrowRight } from "lucide-react";
+import { Package, Heart, MapPin, ArrowRight, Clock, Truck, Check } from "lucide-react";
 import { AccountLayout } from "@/components/layout/AccountLayout";
 import { useAuth } from "@/hooks/use-auth";
 import { useWishlist } from "@/context/WishlistContext";
-import { mockOrders, formatDate, statusLabels, statusColors } from "@/data/accountData";
+import { mockOrders, mockAddresses, formatDate, statusLabels, statusColors } from "@/data/accountData";
 import { formatPrice } from "@/data/mock";
 import { cn } from "@/lib/utils";
 
-export default function Account() {
-  const { user, isAuthenticated } = useAuth();
+export default function AccountOverview() {
+  const { user } = useAuth();
   const { ids } = useWishlist();
-
-  if (!isAuthenticated) {
-    return (
-      <AccountLayout>
-        <div className="text-center py-20">
-          <p className="text-sm text-muted-foreground mb-4">Sign in to access your account, orders, and wishlist.</p>
-          <Link
-            to="/auth?returnTo=/account"
-            className="inline-flex items-center gap-2 h-11 px-6 bg-foreground text-background text-xs font-semibold uppercase tracking-wider rounded-sm hover:bg-foreground/90 transition-colors min-h-[44px]"
-          >
-            Sign In
-          </Link>
-        </div>
-      </AccountLayout>
-    );
-  }
-
   const recentOrder = mockOrders[0];
 
   return (
@@ -45,8 +28,8 @@ export default function Account() {
           {[
             { label: "Orders", value: mockOrders.length.toString(), icon: Package, href: "/account/orders" },
             { label: "Wishlist", value: ids.length.toString(), icon: Heart, href: "/wishlist" },
-            { label: "Addresses", value: "2", icon: MapPin, href: "/account/addresses" },
-            { label: "Recent Order", value: recentOrder.number, icon: Package, href: `/account/orders/${recentOrder.id}`, mono: true },
+            { label: "Addresses", value: mockAddresses.length.toString(), icon: MapPin, href: "/account/addresses" },
+            { label: "Recent Order", value: recentOrder.number, icon: Clock, href: `/account/orders/${recentOrder.id}`, sub: true },
           ].map((card) => {
             const Icon = card.icon;
             return (
@@ -56,7 +39,7 @@ export default function Account() {
                 className="p-4 border border-border/50 rounded-sm hover:bg-surface/50 transition-colors group"
               >
                 <Icon className="h-4 w-4 text-muted-foreground mb-2" />
-                <p className={cn("font-medium", card.mono ? "text-xs font-mono" : "text-lg")}>{card.value}</p>
+                <p className={cn("font-medium", card.sub ? "text-xs font-mono" : "text-lg")}>{card.value}</p>
                 <p className="text-[11px] text-muted-foreground mt-0.5">{card.label}</p>
               </Link>
             );
@@ -68,15 +51,15 @@ export default function Account() {
           <div className="border border-border/50 rounded-sm p-5">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-sm font-medium">Recent Order</h2>
-              <Link to="/account/orders" className="text-[11px] text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+              <Link to={`/account/orders/${recentOrder.id}`} className="text-[11px] text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
                 View All <ArrowRight className="h-3 w-3" />
               </Link>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 mb-3">
               <div className="flex -space-x-2">
                 {recentOrder.items.slice(0, 3).map((item, i) => (
-                  <div key={i} className="w-12 h-14 rounded-sm bg-surface overflow-hidden border-2 border-background">
+                  <div key={i} className="w-12 h-14 rounded-sm bg-surface overflow-hidden border-2 border-background relative">
                     <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
                   </div>
                 ))}
@@ -89,11 +72,16 @@ export default function Account() {
                   </span>
                 </div>
                 <p className="text-[11px] text-muted-foreground mt-0.5">{formatDate(recentOrder.date)}</p>
-                <p className="text-xs text-muted-foreground mt-1 truncate">
-                  {recentOrder.items.map((item) => `${item.designName} ${item.title}`).join(", ")}
-                </p>
               </div>
               <span className="text-sm font-medium text-price shrink-0">{formatPrice(recentOrder.total)}</span>
+            </div>
+
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              {recentOrder.items.map((item, i) => (
+                <span key={i} className="truncate">
+                  {item.designName} {item.title}{item.size ? ` (${item.size})` : ""}{i < recentOrder.items.length - 1 ? ", " : ""}
+                </span>
+              ))}
             </div>
 
             <div className="flex gap-2 mt-4">

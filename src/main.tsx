@@ -41,6 +41,17 @@ const Checkout = lazy(() => import("./pages/Checkout.tsx"));
 const OrderConfirmation = lazy(() => import("./pages/OrderConfirmation.tsx"));
 const CategoryPage = lazy(() => import("./pages/CategoryPage.tsx"));
 const ProductPage = lazy(() => import("./pages/ProductPage.tsx"));
+const LoginPage = lazy(() => import("./pages/Login.tsx"));
+const RegisterPage = lazy(() => import("./pages/Register.tsx"));
+const ForgotPasswordPage = lazy(() => import("./pages/ForgotPassword.tsx"));
+const ResetPasswordPage = lazy(() => import("./pages/ResetPassword.tsx"));
+const AccountOverview = lazy(() => import("./pages/account/AccountOverview.tsx"));
+const OrdersPage = lazy(() => import("./pages/account/OrdersPage.tsx"));
+const OrderDetailPage = lazy(() => import("./pages/account/OrderDetail.tsx"));
+const TrackOrderPage = lazy(() => import("./pages/account/TrackOrder.tsx"));
+const AddressesPage = lazy(() => import("./pages/account/AddressesPage.tsx"));
+const ProfilePage = lazy(() => import("./pages/account/ProfilePage.tsx"));
+const SettingsPage = lazy(() => import("./pages/account/SettingsPage.tsx"));
 
 // Simple loading fallback for route transitions
 function RouteLoading() {
@@ -183,7 +194,18 @@ createRoot(document.getElementById("root")!).render(
                   <Route path="/refunds" element={<Refunds />} />
                   <Route path="/search" element={<SearchPage />} />
                   <Route path="/wishlist" element={<WishlistPage />} />
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/register" element={<RegisterPage />} />
+                  <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                  <Route path="/reset-password" element={<ResetPasswordPage />} />
                   <Route path="/account" element={<Account />} />
+                  <Route path="/account/overview" element={<AccountOverview />} />
+                  <Route path="/account/orders" element={<OrdersPage />} />
+                  <Route path="/account/orders/:order-id" element={<OrderDetailPage />} />
+                  <Route path="/track-order" element={<TrackOrderPage />} />
+                  <Route path="/account/addresses" element={<AddressesPage />} />
+                  <Route path="/account/profile" element={<ProfilePage />} />
+                  <Route path="/account/settings" element={<SettingsPage />} />
                   <Route path="/cart" element={<CartPage />} />
                   <Route path="/checkout" element={<Checkout />} />
                   <Route path="/order-confirmation" element={<OrderConfirmation />} />
