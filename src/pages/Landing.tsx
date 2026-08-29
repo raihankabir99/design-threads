@@ -19,47 +19,47 @@ function HeroSection() {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left: Copy */}
           <div className="max-w-xl">
-            <p className="text-label text-gold mb-6">Design-Led Fashion & Lifestyle</p>
+            <p className="text-label text-gold mb-6">Premium Apparel & Accessories</p>
             <h1 className="text-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl text-foreground">
-              One Design.
+              Wear the Art.
               <br />
-              <span className="text-muted-foreground">Many Products.</span>
+              <span className="text-muted-foreground">Own the Design.</span>
             </h1>
             <p className="text-base lg:text-lg text-muted-foreground mt-6 max-w-md leading-relaxed">
-              Premium prints on fashion, accessories, and lifestyle products.
-              Each design tells a story — choose how you wear it.
+              Original designs on premium t-shirts, hoodies, and accessories.
+              Every piece is made to order with intention and care.
             </p>
             <div className="flex flex-wrap gap-3 mt-8">
               <Link
                 to="/designs"
                 className="inline-flex items-center gap-2 h-12 px-7 bg-foreground text-background text-sm font-medium tracking-wide rounded-sm hover:bg-foreground/90 transition-colors"
               >
-                Explore Designs
+                Shop Now
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 to="/shop"
                 className="inline-flex items-center gap-2 h-12 px-7 border border-border text-sm font-medium tracking-wide rounded-sm hover:bg-surface transition-colors"
               >
-                Shop All
+                View Collection
               </Link>
             </div>
 
             {/* Trust badges */}
             <div className="flex items-center gap-6 mt-12 pt-8 border-t border-border/50">
               <div>
-                <p className="text-lg font-display font-semibold">500+</p>
-                <p className="text-xs text-muted-foreground">Designs</p>
+                <p className="text-lg font-display font-semibold">Premium</p>
+                <p className="text-xs text-muted-foreground">Quality Materials</p>
               </div>
               <div className="w-px h-8 bg-border/50" />
               <div>
-                <p className="text-lg font-display font-semibold">50+</p>
-                <p className="text-xs text-muted-foreground">Countries</p>
+                <p className="text-lg font-display font-semibold">Made to Order</p>
+                <p className="text-xs text-muted-foreground">Zero Waste</p>
               </div>
               <div className="w-px h-8 bg-border/50" />
               <div>
-                <p className="text-lg font-display font-semibold">100%</p>
-                <p className="text-xs text-muted-foreground">Organic</p>
+                <p className="text-lg font-display font-semibold">Worldwide</p>
+                <p className="text-xs text-muted-foreground">Shipping</p>
               </div>
             </div>
           </div>
@@ -226,17 +226,17 @@ function DesignPhilosophySection() {
           <div>
             <p className="text-label text-gold mb-3">Our Philosophy</p>
             <h2 className="text-display text-3xl lg:text-4xl mb-6">
-              Design Is the Product.
+              Designed with Intention.
               <br />
-              <span className="text-muted-foreground">The Product Is the Medium.</span>
+              <span className="text-muted-foreground">Made with Purpose.</span>
             </h2>
             <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-              We believe a design is an independent visual entity. It deserves to exist across
-              many forms — on your chest, in your hands, on your wall, in your daily life.
+              Every design on FAYANITY starts as an original work of art — then finds its way
+              onto premium apparel and accessories. No mass production, no compromise.
             </p>
             <p className="text-sm text-muted-foreground leading-relaxed mb-8">
-              Every product we create is made to order, reducing waste while maintaining
-              the highest quality standards. Premium materials, conscious creation, global reach.
+              Each piece is made to order, reducing waste while maintaining the highest
+              quality standards. Organic cotton, archival inks, and meticulous construction.
             </p>
             <Link
               to="/about"
@@ -263,27 +263,25 @@ function DesignPhilosophySection() {
 function CTASection() {
   return (
     <section className="py-20 lg:py-28 bg-background border-t border-border/50">
-      <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 text-center">
-        <p className="text-label text-gold mb-4">Ready to Start?</p>
-        <h2 className="text-display text-3xl lg:text-5xl mb-6">
-          Find Your Design.
-        </h2>
-        <p className="text-sm text-muted-foreground max-w-md mx-auto mb-8 leading-relaxed">
-          Explore our full collection of original designs and discover your next favorite piece.
-        </p>
-        <div className="flex flex-wrap justify-center gap-3">
+      <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 text-center">            <p className="text-label text-gold mb-4">Ready to Start?</p>
+            <h2 className="text-display text-3xl lg:text-5xl mb-6">
+              Find Your Next Favorite Tee.
+            </h2>
+            <p className="text-sm text-muted-foreground max-w-md mx-auto mb-8 leading-relaxed">
+              Explore our collection of original designs on premium apparel and accessories.
+            </p>            <div className="flex flex-wrap justify-center gap-3">
           <Link
             to="/designs"
             className="inline-flex items-center gap-2 h-12 px-7 bg-gold text-background text-sm font-medium tracking-wide rounded-sm hover:bg-gold-light transition-colors"
           >
-            Browse All Designs
+            Shop Now
             <ArrowRight className="h-4 w-4" />
           </Link>
           <Link
             to="/shop"
             className="inline-flex items-center gap-2 h-12 px-7 border border-border text-sm font-medium tracking-wide rounded-sm hover:bg-surface transition-colors"
           >
-            Shop Products
+            View All Products
           </Link>
         </div>
       </div>

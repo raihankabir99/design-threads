@@ -16,7 +16,7 @@ export default function Refunds() {
             </div>
             <div>
               <h3 className="font-medium text-foreground mb-2">Process</h3>
-              <p>Contact hello@midthread.com with your order number. Once we receive and verify the return, refunds are processed within 5-10 business days to your original payment method.</p>
+              <p>Contact hello@fayanity.com with your order number. Once we receive and verify the return, refunds are processed within 5-10 business days to your original payment method.</p>
             </div>
             <div>
               <h3 className="font-medium text-foreground mb-2">Non-Refundable Items</h3>

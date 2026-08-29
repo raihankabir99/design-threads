@@ -11,15 +11,15 @@ export default function About() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(201,169,110,0.05)_0%,_transparent_50%)]" />
         <div className="relative mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
-            <p className="text-label text-gold mb-4">About MIDTHREAD</p>
+            <p className="text-label text-gold mb-4">About FAYANITY</p>
             <h1 className="text-display text-4xl lg:text-6xl mb-6">
-              Design Is the Product.
+              Designed with Intention.
               <br />
-              <span className="text-muted-foreground">The Product Is the Medium.</span>
+              <span className="text-muted-foreground">Made with Purpose.</span>
             </h1>
             <p className="text-base lg:text-lg text-muted-foreground leading-relaxed max-w-xl">
-              We are a design-led fashion and lifestyle brand. We believe a design is an independent
-              visual entity that deserves to exist across many forms.
+              FAYANITY is a premium t-shirt and apparel brand. We create original designs
+              and bring them to life on high-quality garments and accessories.
             </p>
           </div>
         </div>
@@ -32,15 +32,15 @@ export default function About() {
             {[
               {
                 title: "Design First",
-                desc: "Every piece starts with a design — not a product template. Our visual language is the foundation of everything we create.",
+                desc: "Every garment starts with an original design — not a product template. Our visual language is the foundation of everything we create.",
               },
               {
                 title: "Quality Always",
-                desc: "Premium organic cotton, high-grade ceramics, archival inks. We partner with the best manufacturers to deliver exceptional quality.",
+                desc: "Premium organic cotton, archival inks, and meticulous construction. We partner with the best manufacturers to deliver exceptional quality.",
               },
               {
                 title: "Conscious Creation",
-                desc: "Made to order means zero waste. No overstock, no landfills. Every product is created specifically for you.",
+                desc: "Made to order means zero waste. No overstock, no landfills. Every garment is created specifically for you.",
               },
             ].map((value, i) => (
               <div key={i}>
@@ -60,19 +60,19 @@ export default function About() {
             <div>
               <h2 className="text-display text-2xl lg:text-3xl mb-6">Our Story</h2>
               <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-                MIDTHREAD was born from a simple observation: great design shouldn't be limited
-                to a single product. A powerful visual statement deserves to live on your chest,
-                in your hands, on your wall — wherever you want to carry it.
+                FAYANITY was born from a love of original design and premium apparel. We believe
+                a great design deserves to exist on garments you actually want to wear — not
+                generic blanks with a logo slapped on.
               </p>
               <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-                We operate globally from Europe, working with premium print-on-demand partners
-                who share our commitment to quality. Every product is manufactured to order,
-                eliminating waste while maintaining the highest standards.
+                Every piece is manufactured to order, eliminating waste while maintaining
+                the highest standards. We work with partners who share our commitment to
+                quality, sustainability, and craftsmanship.
               </p>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Our design philosophy draws from minimal Scandinavian aesthetics, bold
-                contemporary art, and the confidence of modern luxury brands. The result is
-                a collection that feels both timeless and distinctly current.
+                Our design philosophy draws from contemporary art, minimalist aesthetics,
+                and the confidence of modern independent brands. The result is a collection
+                that feels both timeless and distinctly current.
               </p>
             </div>
             <div className="grid grid-cols-2 gap-3">

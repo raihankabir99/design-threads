@@ -57,7 +57,7 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
       >
         {/* Header */}
         <div className="flex items-center justify-between px-5 h-16 border-b border-border/50">
-          <span className="font-display text-lg font-semibold tracking-tight">MIDTHREAD</span>
+          <span className="font-display text-lg font-semibold tracking-tight">FAYANITY</span>
           <button onClick={onClose} className="w-10 h-10 flex items-center justify-center" aria-label="Close menu">
             <X className="h-5 w-5" />
           </button>

@@ -55,7 +55,7 @@ export function Header() {
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2">
               <span className="font-display text-xl font-semibold tracking-tight text-foreground">
-                MIDTHREAD
+                FAYANITY
               </span>
             </Link>
 

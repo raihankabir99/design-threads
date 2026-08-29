@@ -9,7 +9,7 @@ export default function Terms() {
           <h1 className="text-display text-3xl lg:text-4xl mb-6">Terms & Conditions</h1>
           <p className="text-xs text-muted-foreground mb-8">Last updated: August 2026</p>
           <div className="space-y-6 text-sm text-muted-foreground leading-relaxed">
-            <p>By using the MIDTHREAD website and services, you agree to these terms and conditions.</p>
+            <p>By using the FAYANITY website and services, you agree to these terms and conditions.</p>
             <div>
               <h3 className="font-medium text-foreground mb-2">Products & Orders</h3>
               <p>All products are made to order. Product images are representations of the final product. Colors may vary slightly due to screen settings. We reserve the right to limit order quantities.</p>
@@ -20,11 +20,11 @@ export default function Terms() {
             </div>
             <div>
               <h3 className="font-medium text-foreground mb-2">Intellectual Property</h3>
-              <p>All designs, images, and content on this website are the property of MIDTHREAD and are protected by intellectual property laws. Unauthorized use is prohibited.</p>
+              <p>All designs, images, and content on this website are the property of FAYANITY and are protected by intellectual property laws. Unauthorized use is prohibited.</p>
             </div>
             <div>
               <h3 className="font-medium text-foreground mb-2">Limitation of Liability</h3>
-              <p>MIDTHREAD's liability is limited to the purchase price of the product. We are not responsible for indirect, incidental, or consequential damages.</p>
+              <p>FAYANITY's liability is limited to the purchase price of the product. We are not responsible for indirect, incidental, or consequential damages.</p>
             </div>
           </div>
         </div>

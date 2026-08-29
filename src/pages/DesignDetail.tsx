@@ -13,6 +13,7 @@ import {
 import { designs } from "@/data/mock";
 import type { ProductType } from "@/data/types";
 import { cn } from "@/lib/utils";
+import { CommentSection } from "@/components/brand/CommentSection";
 
 const typeIcons: Record<ProductType, string> = {
   "t-shirt": "Tee",
@@ -233,6 +234,11 @@ export default function DesignDetail() {
               <ProductCard key={p.id} product={p} designSlug={design.slug} />
             ))}
           </div>
+        </div>
+
+        {/* Messages / Comments */}
+        <div className="mt-16 lg:mt-24">
+          <CommentSection designName={design.name} />
         </div>
 
         {/* More designs */}

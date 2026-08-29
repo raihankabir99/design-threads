@@ -9,7 +9,7 @@ export default function Privacy() {
           <h1 className="text-display text-3xl lg:text-4xl mb-6">Privacy Policy</h1>
           <p className="text-xs text-muted-foreground mb-8">Last updated: August 2026</p>
           <div className="space-y-6 text-sm text-muted-foreground leading-relaxed">
-            <p>At MIDTHREAD, we respect your privacy and are committed to protecting your personal data.</p>
+            <p>At FAYANITY, we respect your privacy and are committed to protecting your personal data.</p>
             <div>
               <h3 className="font-medium text-foreground mb-2">Information We Collect</h3>
               <p>We collect information you provide directly, including your name, email address, shipping address, and payment information when you place an order or create an account.</p>
@@ -24,7 +24,7 @@ export default function Privacy() {
             </div>
             <div>
               <h3 className="font-medium text-foreground mb-2">Your Rights (GDPR)</h3>
-              <p>If you're in the EU, you have the right to access, correct, or delete your personal data. Contact us at hello@midthread.com to exercise these rights.</p>
+              <p>If you're in the EU, you have the right to access, correct, or delete your personal data. Contact us at hello@fayanity.com to exercise these rights.</p>
             </div>
             <div>
               <h3 className="font-medium text-foreground mb-2">Cookies</h3>

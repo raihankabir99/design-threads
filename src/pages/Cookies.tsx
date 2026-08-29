@@ -9,7 +9,7 @@ export default function Cookies() {
           <h1 className="text-display text-3xl lg:text-4xl mb-6">Cookie Policy</h1>
           <p className="text-xs text-muted-foreground mb-8">Last updated: August 2026</p>
           <div className="space-y-6 text-sm text-muted-foreground leading-relaxed">
-            <p>This policy explains how MIDTHREAD uses cookies and similar technologies when you visit our website.</p>
+            <p>This policy explains how FAYANITY uses cookies and similar technologies when you visit our website.</p>
             <div>
               <h3 className="font-medium text-foreground mb-2">Essential Cookies</h3>
               <p>Required for the website to function properly. These handle authentication, security, and basic site operations. Cannot be disabled.</p>

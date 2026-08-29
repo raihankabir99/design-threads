@@ -21,7 +21,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <p className="text-sm font-medium">Email</p>
-                  <p className="text-sm text-muted-foreground">hello@midthread.com</p>
+                  <p className="text-sm text-muted-foreground">hello@fayanity.com</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">

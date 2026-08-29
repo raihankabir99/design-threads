@@ -8,14 +8,14 @@ export default function Returns() {
           <p className="text-label text-gold mb-3">Policy</p>
           <h1 className="text-display text-3xl lg:text-4xl mb-6">Returns & Exchanges</h1>
           <div className="space-y-6 text-sm text-muted-foreground leading-relaxed">
-            <p>We want you to love your MIDTHREAD products. If you're not completely satisfied, we're here to help.</p>
+            <p>We want you to love your FAYANITY products. If you're not completely satisfied, we're here to help.</p>
             <div>
               <h3 className="font-medium text-foreground mb-2">30-Day Return Window</h3>
               <p>You have 30 days from the date of delivery to initiate a return. Items must be unworn, unused, and in their original packaging.</p>
             </div>
             <div>
               <h3 className="font-medium text-foreground mb-2">How to Initiate a Return</h3>
-              <p>Contact our support team at hello@midthread.com with your order number and reason for return. We'll provide return instructions and a prepaid shipping label where applicable.</p>
+              <p>Contact our support team at hello@fayanity.com with your order number and reason for return. We'll provide return instructions and a prepaid shipping label where applicable.</p>
             </div>
             <div>
               <h3 className="font-medium text-foreground mb-2">Refunds</h3>

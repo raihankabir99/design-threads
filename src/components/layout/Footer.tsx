@@ -81,11 +81,11 @@ export function Footer() {
           {/* Brand column */}
           <div className="col-span-2 sm:col-span-3 lg:col-span-1 mb-4 lg:mb-0">
             <Link to="/" className="font-display text-xl font-semibold tracking-tight text-foreground">
-              MIDTHREAD
+              FAYANITY
             </Link>
             <p className="text-sm text-muted-foreground mt-3 max-w-[240px] leading-relaxed">
-              Design-led fashion and lifestyle. One design, many products.
-              Premium quality, conscious creation.
+              Premium t-shirts and apparel. Bold designs,
+              consciously crafted. One design, every product.
             </p>
             <div className="flex items-center gap-3 mt-5">
               <a
@@ -134,10 +134,10 @@ export function Footer() {
       <div className="border-t border-border/50">
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} MIDTHREAD. All rights reserved.
+            &copy; {new Date().getFullYear()} FAYANITY. All rights reserved.
           </p>
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
-            <span>Designed in Europe</span>
+            <span>Designed with intention</span>
             <span className="mx-1.5">·</span>
             <span>Shipped Worldwide</span>
           </div>

@@ -2,7 +2,7 @@ import type { Design, Product, Collection, BlogPost, ProductType, ProductColor }
 
 // --- Placeholder image generators ---
 export function designPlaceholder(name: string, hue: number = 0): string {
-  return `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800"><rect fill="#111" width="800" height="800"/><text x="400" y="380" text-anchor="middle" fill="#c9a96e" font-family="serif" font-size="72" font-weight="bold" opacity="0.9">${name.split(" ").map((w,i) => `<tspan x="400" dy="${i === 0 ? 0 : 90}">${w}</tspan>`).join("")}</text><text x="400" y="540" text-anchor="middle" fill="#555" font-family="sans-serif" font-size="14" letter-spacing="6">MIDTHREAD</text></svg>`)}`;
+  return `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800"><rect fill="#111" width="800" height="800"/><text x="400" y="380" text-anchor="middle" fill="#c9a96e" font-family="serif" font-size="72" font-weight="bold" opacity="0.9">${name.split(" ").map((w,i) => `<tspan x="400" dy="${i === 0 ? 0 : 90}">${w}</tspan>`).join("")}</text><text x="400" y="540" text-anchor="middle" fill="#555" font-family="sans-serif" font-size="14" letter-spacing="6">FAYANITY</text></svg>`)}`;
 }
 
 export function productPlaceholder(type: string, designName: string): string {
@@ -354,7 +354,7 @@ export const blogPosts: BlogPost[] = [
     excerpt: "How modern POD technology delivers premium quality products without the overhead of traditional manufacturing.",
     content: "",
     image: collectionPlaceholder("POD Quality"),
-    author: "MIDTHREAD Team",
+    author: "FAYANITY Team",
     date: "2026-08-20",
     readTime: "5 min read",
     category: "Brand",
@@ -367,7 +367,7 @@ export const blogPosts: BlogPost[] = [
     excerpt: "The creative process behind our signature design — from initial sketch to final product.",
     content: "",
     image: collectionPlaceholder("Design Process"),
-    author: "MIDTHREAD Studio",
+    author: "FAYANITY Studio",
     date: "2026-08-12",
     readTime: "4 min read",
     category: "Design",
@@ -380,7 +380,7 @@ export const blogPosts: BlogPost[] = [
     excerpt: "Why choosing designs you love — rather than following trends — creates a more authentic personal style.",
     content: "",
     image: collectionPlaceholder("Wardrobe"),
-    author: "MIDTHREAD Team",
+    author: "FAYANITY Team",
     date: "2026-08-05",
     readTime: "6 min read",
     category: "Style",

@@ -8,15 +8,15 @@ import {
 } from "@/components/ui/accordion";
 
 const faqs = [
-  { q: "What is MIDTHREAD?", a: "MIDTHREAD is a design-led fashion and lifestyle brand. We create premium products featuring original designs — from t-shirts and hoodies to mugs, posters, and phone cases. Each design exists across multiple products, letting you choose how you want to express it." },
-  { q: "How does print-on-demand work?", a: "Every product is made to order. When you place an order, it's produced by our manufacturing partner and shipped directly to you. This means zero waste, no overstock, and every product is freshly made just for you." },
-  { q: "What is the quality like?", a: "We use premium materials throughout: 100% organic cotton for apparel (180 GSM for tees, 320 GSM for hoodies), archival-quality inks, ceramic mugs, waterproof vinyl stickers, and 200gsm matte paper for posters. Quality is non-negotiable." },
+  { q: "What is FAYANITY?", a: "FAYANITY is a premium t-shirt and apparel brand. We create original designs and bring them to life on high-quality garments and accessories. Every piece is made to order with care." },
+  { q: "How does made-to-order work?", a: "Every garment is made to order. When you place an order, it's produced by our manufacturing partner and shipped directly to you. This means zero waste, no overstock, and every piece is freshly made just for you." },
+  { q: "What is the quality like?", a: "We use premium materials: 100% organic cotton (180 GSM for tees, 320 GSM for hoodies), archival inks, and meticulous construction. Every garment is pre-shrunk and built to last. Quality is non-negotiable." },
   { q: "How long does shipping take?", a: "Shipping times vary by destination. EU orders typically arrive in 5-10 business days, US/Canada in 7-14 business days, and international orders in 10-21 business days. All orders include tracking." },
   { q: "Do you ship internationally?", a: "Yes! We ship to 50+ countries worldwide including all EU countries, UK, Switzerland, Norway, USA, Canada, Saudi Arabia, Bangladesh, and many more. Shipping rates are calculated at checkout." },
-  { q: "What is your return policy?", a: "We offer 30-day returns on all unworn, unused items in their original packaging. If you're not satisfied with your order, contact us within 30 days of delivery for a full refund or exchange." },
-  { q: "Can I request a custom design?", a: "Currently we feature our own curated collection of original designs. We're always expanding our library, so if there's something you'd love to see, let us know through our contact page." },
-  { q: "Are your products sustainable?", a: "We prioritize sustainability through made-to-order production (zero waste), organic cotton, eco-friendly inks, and recyclable packaging. Our POD model eliminates the environmental cost of overproduction." },
-  { q: "How do sizes run?", a: "Our t-shirts and apparel follow standard EU/US sizing with a detailed size guide available on each product page. Products are pre-shrunk to maintain their fit after washing." },
+  { q: "What is your return policy?", a: "We offer 30-day returns on all unworn, unused garments in their original packaging. If you're not satisfied with your order, contact us within 30 days of delivery for a full refund or exchange." },
+  { q: "Can I request a custom design?", a: "We feature our own curated collection of original designs. We're always expanding, so if there's something you'd love to see, let us know through our contact page." },
+  { q: "Are your products sustainable?", a: "We prioritize sustainability through made-to-order production (zero waste), organic cotton, eco-friendly inks, and recyclable packaging. Our model eliminates the environmental cost of overproduction." },
+  { q: "How do sizes run?", a: "Our garments follow standard EU/US sizing with a detailed size guide available on each product page. All items are pre-shrunk to maintain their fit after washing." },
   { q: "Can I track my order?", a: "Yes, every order includes a tracking number. You'll receive an email with tracking details once your order has been dispatched from our production facility." },
 ];
 

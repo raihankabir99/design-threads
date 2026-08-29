@@ -59,18 +59,18 @@ export default function BlogArticle() {
           <p>
             This is a placeholder for the full article content. In a production environment,
             this would contain rich editorial content with images, pull quotes, and detailed
-            storytelling about our brand, designs, and creative process.
+            storytelling about our brand, original designs, and creative process.
           </p>
           <p>
-            Our commitment to quality extends beyond the products themselves. Every design
+            Our commitment to quality extends beyond the garments themselves. Every design
             undergoes a rigorous creative process, from initial concept to final production
-            files. We work closely with our manufacturing partners to ensure each product
-            meets our exacting standards.
+            files. We work closely with our manufacturing partners to ensure each tee,
+            hoodie, and accessory meets our exacting standards.
           </p>
           <p>
             Whether it's the weight of our organic cotton, the vibrancy of our archival inks,
-            or the precision of our die-cut stickers, every detail matters to us. Because
-            when you choose MIDTHREAD, you're choosing more than a product — you're choosing
+            or the precision of our construction, every detail matters to us. Because
+            when you choose FAYANITY, you're choosing more than a garment — you're choosing
             a design philosophy.
           </p>
         </div>
