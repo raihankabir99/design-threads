@@ -1,13 +1,15 @@
 import { Link } from "react-router";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Heart } from "lucide-react";
 import type { Design } from "@/data/types";
 import { productTypeLabel } from "@/data/mock";
+import { useWishlist } from "@/context/WishlistContext";
+import { cn } from "@/lib/utils";
 
 interface DesignCardProps {
   design: Design;
 }
 
-const typeIcons: Record<string, string> = {
+const typeLabels: Record<string, string> = {
   "t-shirt": "Tee",
   "hoodie": "Hoodie",
   "sweatshirt": "Sweat",
@@ -15,7 +17,7 @@ const typeIcons: Record<string, string> = {
   "mug": "Mug",
   "phone-case": "Phone",
   "cap": "Cap",
-  "poster": "Art",
+  "poster": "Poster",
   "sticker": "Sticker",
   "notebook": "Book",
   "cushion": "Cushion",
@@ -24,7 +26,9 @@ const typeIcons: Record<string, string> = {
 };
 
 export function DesignCard({ design }: DesignCardProps) {
-  const featuredTypes = design.products.slice(0, 5);
+  const { toggle, has } = useWishlist();
+  const isWishlisted = has(design.id);
+  const featuredTypes = design.products.slice(0, 4);
   const extraCount = design.products.length - featuredTypes.length;
 
   return (
@@ -33,22 +37,39 @@ export function DesignCard({ design }: DesignCardProps) {
       className="group block relative"
     >
       {/* Image */}
-      <div className="aspect-[4/5] rounded-sm overflow-hidden bg-surface mb-4 relative">
+      <div className="aspect-[4/5] rounded-sm overflow-hidden bg-surface mb-3 relative">
         <img
           src={design.heroImage}
           alt={design.name}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           loading="lazy"
         />
-        {/* Overlay on hover */}
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-end p-5">
-          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-white opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full">
+        {/* Gradient overlay on hover */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+        {/* Hover CTA */}
+        <div className="absolute inset-x-0 bottom-0 p-4 flex items-end justify-between opacity-0 group-hover:opacity-100 transition-all duration-400 translate-y-2 group-hover:translate-y-0">
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-white bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full">
             Explore Design
             <ArrowUpRight className="h-3 w-3" />
           </span>
         </div>
+
+        {/* Wishlist */}
+        <button
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggle(design.id); }}
+          className={cn(
+            "absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center transition-all backdrop-blur-sm z-10",
+            isWishlisted ? "bg-gold text-background" : "bg-black/30 text-white/70 hover:bg-black/50 hover:text-white opacity-0 group-hover:opacity-100"
+          )}
+          aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+        >
+          <Heart className={cn("h-3.5 w-3.5", isWishlisted && "fill-current")} />
+        </button>
+
+        {/* New badge */}
         {design.isNew && (
-          <span className="absolute top-3 left-3 text-label text-gold bg-background/90 backdrop-blur-sm px-2.5 py-1 rounded-sm">
+          <span className="absolute top-3 left-3 text-[10px] font-semibold tracking-wider uppercase px-2.5 py-1 bg-gold text-background rounded-sm z-10">
             New
           </span>
         )}
@@ -64,23 +85,23 @@ export function DesignCard({ design }: DesignCardProps) {
         </p>
 
         {/* Product type pills */}
-        <div className="flex flex-wrap gap-1.5 mt-3">
+        <div className="flex flex-wrap items-center gap-1.5 mt-2.5">
           {featuredTypes.map((type) => (
             <span
               key={type}
-              className="text-[10px] font-medium tracking-wider uppercase text-muted-foreground bg-surface px-2 py-0.5 rounded-sm"
+              className="text-[9px] font-medium tracking-wider uppercase text-muted-foreground bg-surface px-1.5 py-0.5 rounded-sm"
             >
-              {typeIcons[type] || productTypeLabel(type)}
+              {typeLabels[type] || productTypeLabel(type)}
             </span>
           ))}
           {extraCount > 0 && (
-            <span className="text-[10px] font-medium tracking-wider uppercase text-gold px-1 py-0.5">
-              +{extraCount}
+            <span className="text-[9px] font-medium tracking-wider text-gold">
+              +{extraCount} more
             </span>
           )}
         </div>
 
-        <p className="text-[11px] text-muted-foreground mt-2">
+        <p className="text-[10px] text-muted-foreground/60 mt-1.5">
           {design.products.length} products
         </p>
       </div>
