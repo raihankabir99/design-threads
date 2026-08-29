@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router";
-import { User, Package, MapPin, Settings, Heart, LogOut, ChevronRight, Search, X, Menu } from "lucide-react";
+import { User, Package, MapPin, Settings, Heart, LogOut, ChevronRight, Search, X, Menu, Bell } from "lucide-react";
 import { SiteLayout } from "./SiteLayout";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
@@ -12,6 +12,7 @@ const navItems = [
   { href: "/wishlist", label: "Wishlist", icon: Heart },
   { href: "/account/addresses", label: "Addresses", icon: MapPin },
   { href: "/account/profile", label: "Profile", icon: User },
+  { href: "/account/notifications", label: "Notifications", icon: Bell },
   { href: "/account/settings", label: "Settings", icon: Settings },
 ];
 

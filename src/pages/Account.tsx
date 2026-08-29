@@ -1,10 +1,10 @@
 import { Link } from "react-router";
-import { Package, Heart, MapPin, Settings, ArrowRight } from "lucide-react";
+import { Package, Heart, MapPin, ArrowRight, Clock, Eye } from "lucide-react";
 import { AccountLayout } from "@/components/layout/AccountLayout";
 import { useAuth } from "@/hooks/use-auth";
 import { useWishlist } from "@/context/WishlistContext";
 import { mockOrders, formatDate, statusLabels, statusColors } from "@/data/accountData";
-import { formatPrice } from "@/data/mock";
+import { formatPrice, products, designs } from "@/data/mock";
 import { cn } from "@/lib/utils";
 
 export default function Account() {
@@ -28,10 +28,12 @@ export default function Account() {
   }
 
   const recentOrder = mockOrders[0];
+  const recentlyViewed = products.slice(0, 6);
+  const recommended = designs.slice(2, 6);
 
   return (
     <AccountLayout>
-      <div className="space-y-8">
+      <div className="space-y-10">
         {/* Welcome */}
         <div>
           <p className="text-[11px] uppercase tracking-[0.15em] text-gold mb-2">Welcome back</p>
@@ -114,6 +116,88 @@ export default function Account() {
         )}
 
         {/* Quick Actions */}
+        <div>
+          <h2 className="text-sm font-medium mb-4">Quick Actions</h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {[
+              { label: "Track an Order", href: "/track-order", icon: Clock, color: "text-blue-500" },
+              { label: "View Wishlist", href: "/wishlist", icon: Heart, color: "text-red-400" },
+              { label: "Manage Addresses", href: "/account/addresses", icon: MapPin, color: "text-green-500" },
+              { label: "Edit Profile", href: "/account/profile", icon: Eye, color: "text-purple-400" },
+            ].map((action) => {
+              const Icon = action.icon;
+              return (
+                <Link
+                  key={action.label}
+                  to={action.href}
+                  className="p-4 border border-border/50 rounded-sm hover:bg-surface/50 transition-colors group flex items-center gap-3"
+                >
+                  <div className="w-9 h-9 rounded-full bg-surface flex items-center justify-center shrink-0">
+                    <Icon className={cn("h-4 w-4", action.color)} />
+                  </div>
+                  <div>
+                    <p className="text-xs font-medium group-hover:text-gold transition-colors">{action.label}</p>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Recently Viewed */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-medium">Recently Viewed</h2>
+            <Link to="/shop" className="text-[11px] text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+              View All <ArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+            {recentlyViewed.map((product) => (
+              <Link
+                key={product.id}
+                to={`/designs/${product.slug.split("-")[0]}`}
+                className="group"
+              >
+                <div className="aspect-[3/4] rounded-sm bg-surface overflow-hidden mb-2">
+                  <img src={product.images[0]} alt={product.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                </div>
+                <p className="text-[11px] font-medium group-hover:text-gold transition-colors truncate">{product.title}</p>
+                <p className="text-[10px] text-muted-foreground">{formatPrice(product.price)}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Recommended for You */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-sm font-medium">Recommended for You</h2>
+              <p className="text-[11px] text-muted-foreground mt-0.5">Based on your shopping history</p>
+            </div>
+            <Link to="/designs" className="text-[11px] text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+              View All <ArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+            {recommended.map((design) => (
+              <Link
+                key={design.id}
+                to={`/designs/${design.slug}`}
+                className="group"
+              >
+                <div className="aspect-[3/4] rounded-sm bg-surface overflow-hidden mb-2">
+                  <img src={design.heroImage} alt={design.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                </div>
+                <p className="text-[11px] font-medium group-hover:text-gold transition-colors">{design.name}</p>
+                <p className="text-[10px] text-muted-foreground">{design.products.length} products</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom CTA */}
         <div className="grid sm:grid-cols-2 gap-4">
           <Link to="/designs" className="p-5 border border-border/50 rounded-sm hover:bg-surface/50 transition-colors group">
             <p className="text-[11px] uppercase tracking-[0.15em] text-gold mb-1">Discover</p>

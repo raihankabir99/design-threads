@@ -1,10 +1,16 @@
 import { useState } from "react";
 import { Link } from "react-router";
-import { X, AlertTriangle, LogOut, Trash2 } from "lucide-react";
+import { X, AlertTriangle, LogOut, Trash2, Shield, Monitor, Smartphone, Globe, Check, ArrowRight } from "lucide-react";
 import { AccountLayout } from "@/components/layout/AccountLayout";
 import { useAuth } from "@/hooks/use-auth";
 import { FormField, inputClass, selectClass } from "@/components/brand/FormField";
 import { cn } from "@/lib/utils";
+
+const mockSessions = [
+  { id: "s1", device: "Chrome on macOS", location: "Berlin, Germany", lastActive: "Current session", isCurrent: true, icon: Monitor },
+  { id: "s2", device: "Safari on iPhone", location: "Berlin, Germany", lastActive: "2 hours ago", isCurrent: false, icon: Smartphone },
+  { id: "s3", device: "Firefox on Windows", location: "Munich, Germany", lastActive: "3 days ago", isCurrent: false, icon: Monitor },
+];
 
 export default function SettingsPage() {
   const { signOut } = useAuth();
@@ -28,6 +34,10 @@ export default function SettingsPage() {
   const [confirmPw, setConfirmPw] = useState("");
   const [pwSaved, setPwSaved] = useState(false);
 
+  // Security
+  const [twoFA, setTwoFA] = useState(false);
+  const [showSessions, setShowSessions] = useState(false);
+
   const handleSignOut = async () => {
     setSigningOut(true);
     await signOut();
@@ -47,9 +57,9 @@ export default function SettingsPage() {
       <div className="space-y-8 max-w-2xl">
         <h1 className="font-display text-2xl lg:text-3xl font-medium tracking-tight">Account Settings</h1>
 
-        {/* Password & Security */}
+        {/* Password */}
         <section className="space-y-4">
-          <h2 className="text-sm font-medium">Password & Security</h2>
+          <h2 className="text-sm font-medium">Password</h2>
           <div className="p-5 border border-border/50 rounded-sm space-y-4">
             <FormField label="Current Password" htmlFor="currentPw">
               <input id="currentPw" type="password" value={currentPw} onChange={(e) => setCurrentPw(e.target.value)} className={inputClass} placeholder="Enter current password" />
@@ -64,10 +74,91 @@ export default function SettingsPage() {
             <button
               onClick={handlePasswordSave}
               disabled={!currentPw || !newPw || newPw !== confirmPw}
-              className="h-10 px-5 text-xs font-medium bg-foreground text-background rounded-sm hover:bg-foreground/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="h-10 px-5 text-xs font-medium bg-foreground text-background rounded-sm hover:bg-foreground/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
-              {pwSaved ? "Password Updated" : "Update Password"}
+              {pwSaved ? <><Check className="h-3.5 w-3.5" /> Password Updated</> : "Update Password"}
             </button>
+          </div>
+        </section>
+
+        {/* Two-Step Verification */}
+        <section className="space-y-4">
+          <h2 className="text-sm font-medium">Security</h2>
+          <div className="border border-border/50 rounded-sm divide-y divide-border/50">
+            {/* 2FA */}
+            <div className="p-5 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-surface flex items-center justify-center shrink-0">
+                  <Shield className="h-4 w-4 text-muted-foreground" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Two-Step Verification</p>
+                  <p className="text-[11px] text-muted-foreground">Add an extra layer of security to your account</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setTwoFA(!twoFA)}
+                className={cn(
+                  "relative w-10 h-6 rounded-full transition-colors shrink-0",
+                  twoFA ? "bg-foreground" : "bg-border"
+                )}
+                role="switch"
+                aria-checked={twoFA}
+              >
+                <span className={cn(
+                  "absolute top-1 w-4 h-4 rounded-full bg-background transition-transform",
+                  twoFA ? "left-5" : "left-1"
+                )} />
+              </button>
+            </div>
+
+            {/* Active Sessions */}
+            <div className="p-5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-surface flex items-center justify-center shrink-0">
+                    <Monitor className="h-4 w-4 text-muted-foreground" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">Active Sessions</p>
+                    <p className="text-[11px] text-muted-foreground">{mockSessions.length} devices signed in</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowSessions(!showSessions)}
+                  className="text-[11px] text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+                >
+                  {showSessions ? "Hide" : "View Sessions"}
+                  <ArrowRight className={cn("h-3 w-3 transition-transform", showSessions && "rotate-90")} />
+                </button>
+              </div>
+              {showSessions && (
+                <div className="mt-4 space-y-2">
+                  {mockSessions.map((session) => {
+                    const Icon = session.icon;
+                    return (
+                      <div key={session.id} className="flex items-center gap-3 p-3 bg-surface/30 rounded-sm">
+                        <Icon className="h-4 w-4 text-muted-foreground shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <p className="text-xs font-medium truncate">{session.device}</p>
+                            {session.isCurrent && (
+                              <span className="text-[9px] px-1.5 py-0.5 bg-green-500/10 text-green-500 rounded-sm font-medium">Current</span>
+                            )}
+                          </div>
+                          <p className="text-[10px] text-muted-foreground">{session.location} · {session.lastActive}</p>
+                        </div>
+                        {!session.isCurrent && (
+                          <button className="text-[10px] text-muted-foreground hover:text-red-500 transition-colors">
+                            Revoke
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </div>
         </section>
 
@@ -80,8 +171,11 @@ export default function SettingsPage() {
                 <option value="en">English</option>
                 <option value="de">Deutsch</option>
                 <option value="fr">Français</option>
+                <option value="es">Español</option>
+                <option value="it">Italiano</option>
                 <option value="ar">العربية</option>
               </select>
+              <p className="text-[10px] text-muted-foreground mt-1">UI language — more languages coming soon.</p>
             </FormField>
             <FormField label="Currency" htmlFor="currency">
               <select id="currency" value={currency} onChange={(e) => setCurrency(e.target.value)} className={selectClass}>
@@ -89,7 +183,10 @@ export default function SettingsPage() {
                 <option value="GBP">GBP £</option>
                 <option value="USD">USD $</option>
                 <option value="SAR">SAR ﷼</option>
+                <option value="CHF">CHF ₣</option>
+                <option value="CAD">CAD $</option>
               </select>
+              <p className="text-[10px] text-muted-foreground mt-1">Display currency — conversion rates are applied at checkout.</p>
             </FormField>
           </div>
         </section>

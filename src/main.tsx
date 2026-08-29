@@ -51,6 +51,7 @@ const OrderDetailPage = lazy(() => import("./pages/account/OrderDetail.tsx"));
 const TrackOrderPage = lazy(() => import("./pages/account/TrackOrder.tsx"));
 const AddressesPage = lazy(() => import("./pages/account/AddressesPage.tsx"));
 const ProfilePage = lazy(() => import("./pages/account/ProfilePage.tsx"));
+const NotificationsPage = lazy(() => import("./pages/account/NotificationsPage.tsx"));
 const SettingsPage = lazy(() => import("./pages/account/SettingsPage.tsx"));
 const LegalPage = lazy(() => import("./pages/Legal.tsx"));
 
@@ -206,6 +207,7 @@ createRoot(document.getElementById("root")!).render(
                   <Route path="/track-order" element={<TrackOrderPage />} />
                   <Route path="/account/addresses" element={<AddressesPage />} />
                   <Route path="/account/profile" element={<ProfilePage />} />
+                  <Route path="/account/notifications" element={<NotificationsPage />} />
                   <Route path="/account/settings" element={<SettingsPage />} />
                   <Route path="/legal" element={<LegalPage />} />
                   <Route path="/cart" element={<CartPage />} />
