@@ -61,10 +61,9 @@ export function ProductCard({ product, designSlug, onQuickView }: ProductCardPro
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggle(designId); }}
             className={cn(
               "absolute top-2 right-2 sm:top-3 sm:right-3 w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all z-10",
-              "sm:opacity-0 sm:group-hover:opacity-100",
-              isWishlisted
+              "sm:opacity-0 sm:group-hover:opacity-100",                isWishlisted
                 ? "bg-gold text-background sm:opacity-100"
-                : "bg-black/50 text-white hover:bg-black/70 backdrop-blur-sm"
+                : "bg-black/60 text-white hover:bg-black/80"
             )}
             aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
           >
@@ -76,7 +75,7 @@ export function ProductCard({ product, designSlug, onQuickView }: ProductCardPro
             <button
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); onQuickView(product); }}
               className={cn(
-                "absolute bottom-2 right-2 sm:bottom-3 sm:right-3 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70 transition-all backdrop-blur-sm z-10",
+                "absolute bottom-2 right-2 sm:bottom-3 sm:right-3 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80 transition-all z-10",
                 "sm:opacity-0 sm:group-hover:opacity-100"
               )}
               aria-label="Quick view"

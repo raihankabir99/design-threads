@@ -160,9 +160,17 @@
   background: #555;
 }
 
-/* Smooth image loading — opacity animates once the browser paints */
+/* Smooth image loading — only on load, not on every scroll frame */
 img {
+  opacity: 1;
+}
+img[loading="lazy"] {
+  opacity: 0;
   transition: opacity 0.3s ease;
+}
+img[loading="lazy"].loaded,
+img:not([loading="lazy"]) {
+  opacity: 1;
 }
 
 /* iOS safe-area support */
@@ -172,8 +180,8 @@ img {
   }
 }
 
-/* Prevent horizontal overflow globally */
-html, body {
+/* Prevent horizontal overflow only on body, not html (html overflow-x causes scroll jank) */
+body {
   overflow-x: hidden;
 }
 
@@ -202,5 +210,21 @@ a, button, [role="button"], input, select, textarea {
 @media (max-width: 768px) {
   a, button, [role="button"] {
     min-height: 44px;
+  }
+}
+
+/* GPU-composited transitions only — avoid triggering layout */
+.will-change-transform {
+  will-change: transform;
+}
+
+/* Smooth scroll only on the scroll container, not the whole page */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }

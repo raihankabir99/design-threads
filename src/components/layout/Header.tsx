@@ -92,7 +92,7 @@ export function Header() {
         className={cn(
           "fixed left-0 right-0 z-50 transition-all duration-300",
           scrolled || !isLanding
-            ? "bg-background/95 backdrop-blur-md border-b border-border/50"
+            ? "bg-background/95 border-b border-border/50 will-change-transform"
             : "bg-transparent"
         )}
       >
@@ -202,7 +202,7 @@ export function Header() {
       {/* Inline search overlay — controlled by header state */}
       {searchOpen && (
         <div className="fixed inset-0 z-[100]">
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setSearchOpen(false)} />
+          <div className="absolute inset-0 bg-black/70" onClick={() => setSearchOpen(false)} />
           <div className="relative mx-auto max-w-2xl mt-20 px-4 transition-all duration-300 animate-in fade-in slide-in-from-top-4">
             <SearchOverlayInline onClose={() => setSearchOpen(false)} />
           </div>

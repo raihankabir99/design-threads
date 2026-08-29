@@ -62,7 +62,7 @@ export function DesignCard({ design }: DesignCardProps) {
             "absolute top-2 right-2 sm:top-3 sm:right-3 w-8 h-8 rounded-full flex items-center justify-center transition-all backdrop-blur-sm z-10",
             isWishlisted
               ? "bg-gold text-background"
-              : "bg-black/30 text-white/70 hover:bg-black/50 hover:text-white sm:opacity-0 sm:group-hover:opacity-100"
+              : "bg-black/40 text-white/80 hover:bg-black/60 hover:text-white sm:opacity-0 sm:group-hover:opacity-100"
           )}
           aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
         >
