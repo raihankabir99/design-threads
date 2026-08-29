@@ -213,6 +213,22 @@ a, button, [role="button"], input, select, textarea {
   }
 }
 
+/* Aurora background animation */
+@keyframes aurora {
+  0% {
+    background-position: 50% 50%, 50% 50%;
+  }
+  50% {
+    background-position: 0% 0%, 100% 100%;
+  }
+  100% {
+    background-position: 50% 50%, 50% 50%;
+  }
+}
+.animate-aurora {
+  animation: aurora 8s ease-in-out infinite;
+}
+
 /* GPU-composited transitions only — avoid triggering layout */
 .will-change-transform {
   will-change: transform;

@@ -3,6 +3,7 @@ import { ArrowRight, ArrowUpRight, Star, Package, Palette, Globe, Shield, Messag
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { DesignCard } from "@/components/brand/DesignCard";
 import { ProductCard } from "@/components/brand/ProductCard";
+import { AuroraBackground } from "@/components/brand/AuroraBackground";
 import { designs, collections, products, blogPosts, getFeaturedDesigns, getBestsellerDesigns, productPlaceholder } from "@/data/mock";
 
 /* ─────────────────────────────────────────────
@@ -10,12 +11,9 @@ import { designs, collections, products, blogPosts, getFeaturedDesigns, getBests
    ───────────────────────────────────────────── */
 function HeroSection() {
   return (
-    <section className="relative min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-background">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(201,169,110,0.06)_0%,_transparent_60%)]" />
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-      </div>
+    <AuroraBackground showRadialGradient className="relative min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden bg-background">
+      {/* Gold radial accent */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(201,169,110,0.08)_0%,_transparent_60%)] z-0" />
 
       <div className="relative mx-auto max-w-[1440px] w-full px-4 sm:px-6 lg:px-8 py-20 lg:py-0">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
@@ -99,7 +97,7 @@ function HeroSection() {
           </div>
         </div>
       </div>
-    </section>
+    </AuroraBackground>
   );
 }
 
