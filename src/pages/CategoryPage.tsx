@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from "react";
-import { useSearchParams, Link } from "react-router";
+import { useParams, Link } from "react-router";
 import { SlidersHorizontal, ChevronDown, ChevronRight, X } from "lucide-react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { ProductCard } from "@/components/brand/ProductCard";
@@ -10,23 +10,27 @@ import { products, designs } from "@/data/mock";
 import type { ProductType } from "@/data/types";
 import { cn } from "@/lib/utils";
 
-/* ─── Category configuration ─── */
-const productTypes: { value: ProductType | "all"; label: string; description: string }[] = [
-  { value: "all", label: "All", description: "Explore the full collection of designs across every product." },
-  { value: "t-shirt", label: "T-Shirts", description: "Designed for everyday expression. Graphic, minimal and artistic designs on premium tees." },
-  { value: "hoodie", label: "Hoodies", description: "Bold designs on heavyweight fleece. Warm, comfortable, and unmistakably yours." },
-  { value: "sweatshirt", label: "Sweatshirts", description: "Midweight comfort meets original artwork. Effortless layering for any season." },
-  { value: "tote-bag", label: "Tote Bags", description: "Carry the design with you. Organic canvas totes built for daily use." },
-  { value: "mug", label: "Mugs", description: "Start your morning with original art. Ceramic mugs printed with intention." },
-  { value: "phone-case", label: "Phone Cases", description: "Protect your phone with designs that stand out. Slim, durable, wireless-charge ready." },
-  { value: "cap", label: "Caps", description: "Structured caps with embroidered designs. Everyday headwear, elevated." },
-  { value: "poster", label: "Posters", description: "Gallery-quality prints. Original designs for your walls, printed on archival paper." },
-  { value: "sticker", label: "Stickers", description: "Waterproof vinyl stickers. Small designs with big personality." },
-  { value: "notebook", label: "Notebooks", description: "Hardcover notebooks with design covers. 192 pages of possibility." },
-  { value: "cushion", label: "Cushions", description: "Decorative cushions featuring original designs. 45×45cm, hidden zipper." },
-  { value: "kids-t-shirt", label: "Kids", description: "The same great designs, scaled for little ones. Organic cotton, tag-free." },
-  { value: "baby-onesie", label: "Baby", description: "Original designs for the youngest fans. Soft organic cotton onesies." },
-];
+/* ─── Category mapping from URL slug to ProductType ─── */
+const categoryMap: Record<string, { type: ProductType; label: string; description: string }> = {
+  "t-shirts": { type: "t-shirt", label: "T-Shirts", description: "Designed for everyday expression. Graphic, minimal and artistic designs on premium tees." },
+  "hoodies": { type: "hoodie", label: "Hoodies", description: "Bold designs on heavyweight fleece. Warm, comfortable, and unmistakably yours." },
+  "sweatshirts": { type: "sweatshirt", label: "Sweatshirts", description: "Midweight comfort meets original artwork. Effortless layering for any season." },
+  "tote-bags": { type: "tote-bag", label: "Tote Bags", description: "Carry the design with you. Organic canvas totes built for daily use." },
+  "mugs": { type: "mug", label: "Mugs", description: "Start your morning with original art. Ceramic mugs printed with intention." },
+  "phone-cases": { type: "phone-case", label: "Phone Cases", description: "Protect your phone with designs that stand out. Slim, durable, wireless-charge ready." },
+  "caps": { type: "cap", label: "Caps", description: "Structured caps with embroidered designs. Everyday headwear, elevated." },
+  "posters": { type: "poster", label: "Posters & Wall Art", description: "Gallery-quality prints. Original designs for your walls, printed on archival paper." },
+  "stickers": { type: "sticker", label: "Stickers", description: "Waterproof vinyl stickers. Small designs with big personality." },
+  "notebooks": { type: "notebook", label: "Notebooks", description: "Hardcover notebooks with design covers. 192 pages of possibility." },
+  "cushions": { type: "cushion", label: "Cushions", description: "Decorative cushions featuring original designs. 45×45cm, hidden zipper." },
+  "kids": { type: "kids-t-shirt", label: "Kids T-Shirts", description: "The same great designs, scaled for little ones. Organic cotton, tag-free." },
+  "baby": { type: "baby-onesie", label: "Baby Onesies", description: "Original designs for the youngest fans. Soft organic cotton onesies." },
+};
+
+const allCategoryTabs = Object.entries(categoryMap).map(([slug, cat]) => ({
+  slug,
+  label: cat.label,
+}));
 
 const sortOptions = [
   { value: "featured", label: "Featured" },
@@ -45,63 +49,32 @@ const defaultFilters: FilterState = {
   designStyles: [],
 };
 
-export default function Shop() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const initialType = searchParams.get("type") as ProductType | "all" || "all";
-  const initialSort = searchParams.get("sort") || "featured";
+export default function CategoryPage() {
+  const { slug } = useParams<{ slug: string }>();
+  const category = categoryMap[slug || ""] || categoryMap["t-shirts"];
+  const activeType = category.type;
 
-  const [selectedType, setSelectedType] = useState<ProductType | "all">(initialType);
-  const [sortBy, setSortBy] = useState(initialSort);
+  const [sortBy, setSortBy] = useState("featured");
   const [filters, setFilters] = useState<FilterState>(defaultFilters);
   const [filterOpen, setFilterOpen] = useState(false);
   const [quickViewProduct, setQuickViewProduct] = useState<typeof products[0] | null>(null);
   const [visibleCount, setVisibleCount] = useState(12);
 
-  const currentCategory = productTypes.find((t) => t.value === selectedType) || productTypes[0];
-
-  const handleTypeChange = useCallback((type: ProductType | "all") => {
-    setSelectedType(type);
-    setVisibleCount(12);
-    if (type === "all") {
-      searchParams.delete("type");
-    } else {
-      searchParams.set("type", type);
-    }
-    setSearchParams(searchParams, { replace: true });
-  }, [searchParams, setSearchParams]);
-
   const handleClearFilters = useCallback(() => {
     setFilters(defaultFilters);
-    setSelectedType("all");
     setVisibleCount(12);
-    searchParams.delete("type");
-    setSearchParams(searchParams, { replace: true });
-  }, [searchParams, setSearchParams]);
+  }, []);
 
   const filteredProducts = useMemo(() => {
-    let result = [...products];
+    let result = products.filter((p) => p.type === activeType);
 
-    // Type filter (from category tabs)
-    if (selectedType !== "all") {
-      result = result.filter((p) => p.type === selectedType);
-    }
-
-    // Filter drawer types
-    if (filters.types.length > 0) {
-      result = result.filter((p) => filters.types.includes(p.type));
-    }
-
-    // Size filter
+    // Filter drawer filters
     if (filters.sizes.length > 0) {
       result = result.filter((p) => p.sizes?.some((s) => filters.sizes.includes(s)));
     }
-
-    // Color filter
     if (filters.colors.length > 0) {
       result = result.filter((p) => p.colors.some((c) => filters.colors.includes(c.name)));
     }
-
-    // Price range filter
     if (filters.priceRange.length > 0) {
       result = result.filter((p) => {
         return filters.priceRange.some((range) => {
@@ -118,12 +91,8 @@ export default function Shop() {
 
     // Sort
     switch (sortBy) {
-      case "price-asc":
-        result.sort((a, b) => a.price - b.price);
-        break;
-      case "price-desc":
-        result.sort((a, b) => b.price - a.price);
-        break;
+      case "price-asc": result.sort((a, b) => a.price - b.price); break;
+      case "price-desc": result.sort((a, b) => b.price - a.price); break;
       case "best":
         result.sort((a, b) => {
           if (a.badge === "bestseller" && b.badge !== "bestseller") return -1;
@@ -141,12 +110,12 @@ export default function Shop() {
     }
 
     return result;
-  }, [selectedType, sortBy, filters]);
+  }, [activeType, sortBy, filters]);
 
   const visibleProducts = filteredProducts.slice(0, visibleCount);
   const hasMore = visibleCount < filteredProducts.length;
 
-  const activeFilterCount = filters.types.length + filters.sizes.length + filters.colors.length + filters.priceRange.length + filters.designStyles.length;
+  const activeFilterCount = filters.sizes.length + filters.colors.length + filters.priceRange.length + filters.designStyles.length;
 
   return (
     <SiteLayout>
@@ -155,47 +124,46 @@ export default function Shop() {
         <nav className="flex items-center gap-1.5 text-[11px] text-muted-foreground" aria-label="Breadcrumb">
           <Link to="/" className="hover:text-foreground transition-colors">Home</Link>
           <ChevronRight className="h-3 w-3" />
-          <span className="text-foreground">Shop</span>
-          {selectedType !== "all" && (
-            <>
-              <ChevronRight className="h-3 w-3" />
-              <span className="text-foreground">{currentCategory.label}</span>
-            </>
-          )}
+          <Link to="/shop" className="hover:text-foreground transition-colors">Shop</Link>
+          <ChevronRight className="h-3 w-3" />
+          <span className="text-foreground">{category.label}</span>
         </nav>
       </div>
 
-      {/* Shop Hero */}
+      {/* Category Hero */}
       <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
         <div className="max-w-2xl">
-          <p className="text-[11px] uppercase tracking-[0.2em] text-gold mb-3">Collection</p>
+          <p className="text-[11px] uppercase tracking-[0.2em] text-gold mb-3">{category.label}</p>
           <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-medium tracking-tight">
-            {currentCategory.label === "All" ? "Shop All" : currentCategory.label}
+            {category.label}
           </h1>
           <p className="text-sm text-muted-foreground mt-3 leading-relaxed max-w-lg">
-            {currentCategory.description}
+            {category.description}
           </p>
         </div>
       </div>
 
-      {/* Category Navigation */}
+      {/* Category Tabs */}
       <div className="border-y border-border/50 bg-surface/30">
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
           <div className="flex gap-0 overflow-x-auto scrollbar-none py-0 -mx-4 px-4 lg:mx-0 lg:px-0">
-            {productTypes.map((t) => (
-              <button
-                key={t.value}
-                onClick={() => handleTypeChange(t.value)}
-                className={cn(
-                  "whitespace-nowrap px-4 py-3.5 text-xs tracking-wider transition-all border-b-2 shrink-0",
-                  selectedType === t.value
-                    ? "text-foreground border-foreground font-medium"
-                    : "text-muted-foreground border-transparent hover:text-foreground hover:border-foreground/30"
-                )}
-              >
-                {t.label}
-              </button>
-            ))}
+            {allCategoryTabs.map((cat) => {
+              const isActive = cat.slug === slug;
+              return (
+                <Link
+                  key={cat.slug}
+                  to={`/shop/${cat.slug}`}
+                  className={cn(
+                    "whitespace-nowrap px-4 py-3.5 text-xs tracking-wider transition-all border-b-2 shrink-0",
+                    isActive
+                      ? "text-foreground border-foreground font-medium"
+                      : "text-muted-foreground border-transparent hover:text-foreground hover:border-foreground/30"
+                  )}
+                >
+                  {cat.label}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -204,7 +172,6 @@ export default function Shop() {
       <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between py-4 border-b border-border/50">
           <div className="flex items-center gap-3">
-            {/* Mobile filter button */}
             <button
               onClick={() => setFilterOpen(true)}
               className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors min-h-[44px]"
@@ -218,17 +185,8 @@ export default function Shop() {
               )}
             </button>
 
-            {/* Active filter chips */}
             {activeFilterCount > 0 && (
               <div className="hidden md:flex items-center gap-1.5">
-                {filters.types.map((t) => (
-                  <span key={t} className="inline-flex items-center gap-1 text-[10px] px-2 py-1 bg-surface rounded-sm text-muted-foreground">
-                    {productTypes.find((pt) => pt.value === t)?.label}
-                    <button onClick={() => setFilters({ ...filters, types: filters.types.filter((x) => x !== t) })} className="hover:text-foreground">
-                      <X className="h-2.5 w-2.5" />
-                    </button>
-                  </span>
-                ))}
                 {filters.sizes.map((s) => (
                   <span key={s} className="inline-flex items-center gap-1 text-[10px] px-2 py-1 bg-surface rounded-sm text-muted-foreground">
                     Size: {s}
@@ -254,13 +212,11 @@ export default function Shop() {
               </div>
             )}
 
-            {/* Result count */}
             <span className="text-xs text-muted-foreground hidden sm:block">
               {filteredProducts.length} {filteredProducts.length === 1 ? "product" : "products"}
             </span>
           </div>
 
-          {/* Sort */}
           <div className="relative">
             <select
               value={sortBy}
@@ -295,7 +251,6 @@ export default function Shop() {
               })}
             </div>
 
-            {/* Load More */}
             {hasMore && (
               <div className="text-center mt-12">
                 <button
@@ -310,47 +265,20 @@ export default function Shop() {
         ) : (
           <EmptyState
             title="No products found"
-            description="We couldn't find anything matching your selection. Try adjusting your filters or browse a different category."
+            description={`No ${category.label.toLowerCase()} match your current filters. Try adjusting your selection.`}
             action={
               <button
                 onClick={handleClearFilters}
                 className="px-6 py-3 text-xs font-medium uppercase tracking-wider bg-foreground text-background rounded-sm hover:bg-foreground/90 transition-colors min-h-[44px]"
               >
-                Clear All Filters
+                Clear Filters
               </button>
             }
           />
         )}
       </div>
 
-      {/* Newsletter */}
-      <div className="border-t border-border/50 bg-surface/20">
-        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 py-16 lg:py-20 text-center">
-          <p className="text-[11px] uppercase tracking-[0.2em] text-gold mb-3">Stay Connected</p>
-          <h2 className="font-display text-2xl lg:text-3xl font-medium mb-3">Join the Community</h2>
-          <p className="text-sm text-muted-foreground mb-8 max-w-md mx-auto">
-            Discover new designs, collections and special releases.
-          </p>
-          <form onSubmit={(e) => e.preventDefault()} className="flex max-w-md mx-auto gap-2">
-            <input
-              type="email"
-              placeholder="Your email address"
-              className="flex-1 h-11 px-4 bg-surface border border-border rounded-sm text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground/40 transition-colors"
-            />
-            <button
-              type="submit"
-              className="h-11 px-6 bg-foreground text-background text-xs font-semibold uppercase tracking-wider rounded-sm hover:bg-foreground/90 transition-colors shrink-0"
-            >
-              Subscribe
-            </button>
-          </form>
-          <p className="text-[10px] text-muted-foreground/60 mt-3">
-            By subscribing, you agree to receive updates from us.
-          </p>
-        </div>
-      </div>
-
-      {/* Filter Drawer (mobile) */}
+      {/* Filter Drawer */}
       <FilterDrawer
         open={filterOpen}
         onClose={() => setFilterOpen(false)}
@@ -359,7 +287,7 @@ export default function Shop() {
         onClear={handleClearFilters}
       />
 
-      {/* Quick View Modal */}
+      {/* Quick View */}
       {quickViewProduct && (
         <QuickViewModal
           product={quickViewProduct}

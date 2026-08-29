@@ -38,6 +38,7 @@ const WishlistPage = lazy(() => import("./pages/Wishlist.tsx"));
 const Account = lazy(() => import("./pages/Account.tsx"));
 const CartPage = lazy(() => import("./pages/Cart.tsx"));
 const Checkout = lazy(() => import("./pages/Checkout.tsx"));
+const CategoryPage = lazy(() => import("./pages/CategoryPage.tsx"));
 
 // Simple loading fallback for route transitions
 function RouteLoading() {
@@ -148,6 +149,19 @@ createRoot(document.getElementById("root")!).render(
                   <Route path="/auth" element={<AuthPage redirectAfterAuth="/dashboard" />} />
                   <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
                   <Route path="/shop" element={<Shop />} />
+                  <Route path="/shop/t-shirts" element={<CategoryPage />} />
+                  <Route path="/shop/hoodies" element={<CategoryPage />} />
+                  <Route path="/shop/sweatshirts" element={<CategoryPage />} />
+                  <Route path="/shop/tote-bags" element={<CategoryPage />} />
+                  <Route path="/shop/mugs" element={<CategoryPage />} />
+                  <Route path="/shop/phone-cases" element={<CategoryPage />} />
+                  <Route path="/shop/caps" element={<CategoryPage />} />
+                  <Route path="/shop/posters" element={<CategoryPage />} />
+                  <Route path="/shop/stickers" element={<CategoryPage />} />
+                  <Route path="/shop/notebooks" element={<CategoryPage />} />
+                  <Route path="/shop/cushions" element={<CategoryPage />} />
+                  <Route path="/shop/kids" element={<CategoryPage />} />
+                  <Route path="/shop/baby" element={<CategoryPage />} />
                   <Route path="/shop/:slug" element={<ProductDetail />} />
                   <Route path="/designs" element={<Designs />} />
                   <Route path="/designs/:slug" element={<DesignDetail />} />

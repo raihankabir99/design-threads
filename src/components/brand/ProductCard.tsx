@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 interface ProductCardProps {
   product: Product;
   designSlug?: string;
+  onQuickView?: (product: Product) => void;
 }
 
 const badgeStyles: Record<string, string> = {
@@ -17,7 +18,7 @@ const badgeStyles: Record<string, string> = {
   sale: "bg-red-600 text-white",
 };
 
-export function ProductCard({ product, designSlug }: ProductCardProps) {
+export function ProductCard({ product, designSlug, onQuickView }: ProductCardProps) {
   const { toggle, has } = useWishlist();
   const designId = product.designId;
   const isWishlisted = has(designId);
@@ -25,6 +26,8 @@ export function ProductCard({ product, designSlug }: ProductCardProps) {
   const href = designSlug
     ? `/designs/${designSlug}?type=${product.type}`
     : `/shop/${product.slug}`;
+
+  const designHref = designSlug ? `/designs/${designSlug}` : undefined;
 
   return (
     <div className="group relative">
@@ -48,13 +51,13 @@ export function ProductCard({ product, designSlug }: ProductCardProps) {
 
           {/* Badge */}
           {product.badge && (
-            <span className={cn("absolute top-3 left-3 text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-sm", badgeStyles[product.badge])}>
+            <span className={cn("absolute top-3 left-3 text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-sm z-10", badgeStyles[product.badge])}>
               {product.badge}
             </span>
           )}
 
           {/* Hover actions */}
-          <div className="absolute inset-x-0 bottom-0 p-3 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="absolute inset-x-0 bottom-0 p-3 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
             <button
               onClick={(e) => { e.preventDefault(); toggle(designId); }}
               className={cn(
@@ -65,12 +68,15 @@ export function ProductCard({ product, designSlug }: ProductCardProps) {
             >
               <Heart className={cn("h-4 w-4", isWishlisted && "fill-current")} />
             </button>
-            <button
-              className="w-9 h-9 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70 transition-all backdrop-blur-sm"
-              aria-label="Quick view"
-            >
-              <Eye className="h-4 w-4" />
-            </button>
+            {onQuickView && (
+              <button
+                onClick={(e) => { e.preventDefault(); onQuickView(product); }}
+                className="w-9 h-9 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70 transition-all backdrop-blur-sm"
+                aria-label="Quick view"
+              >
+                <Eye className="h-4 w-4" />
+              </button>
+            )}
           </div>
         </div>
       </Link>
@@ -78,7 +84,7 @@ export function ProductCard({ product, designSlug }: ProductCardProps) {
       {/* Info */}
       <div className="mt-3 space-y-1.5">
         <Link to={href} className="block">
-          <p className="text-xs text-muted-foreground uppercase tracking-wider">
+          <p className="text-[10px] text-muted-foreground uppercase tracking-[0.12em]">
             {productTypeLabel(product.type)}
           </p>
           <h3 className="text-sm font-medium mt-0.5 group-hover:text-gold transition-colors line-clamp-1">
@@ -92,6 +98,16 @@ export function ProductCard({ product, designSlug }: ProductCardProps) {
             <span className="text-xs text-muted-foreground line-through">{formatPrice(product.compareAtPrice)}</span>
           )}
         </div>
+
+        {/* Design family link */}
+        {designHref && (
+          <Link
+            to={designHref}
+            className="inline-block text-[10px] uppercase tracking-wider text-muted-foreground hover:text-gold transition-colors mt-0.5"
+          >
+            View design →
+          </Link>
+        )}
 
         {/* Color dots */}
         {product.colors.length > 1 && (
