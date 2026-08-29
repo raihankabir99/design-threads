@@ -51,51 +51,57 @@ export function ProductCard({ product, designSlug, onQuickView }: ProductCardPro
 
           {/* Badge */}
           {product.badge && (
-            <span className={cn("absolute top-3 left-3 text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-sm z-10", badgeStyles[product.badge])}>
+            <span className={cn("absolute top-2 left-2 sm:top-3 sm:left-3 text-[9px] sm:text-[10px] font-semibold tracking-wider uppercase px-1.5 sm:px-2 py-0.5 rounded-sm z-10", badgeStyles[product.badge])}>
               {product.badge}
             </span>
           )}
 
-          {/* Hover actions */}
-          <div className="absolute inset-x-0 bottom-0 p-3 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
-            <button
-              onClick={(e) => { e.preventDefault(); toggle(designId); }}
-              className={cn(
-                "w-9 h-9 rounded-full flex items-center justify-center transition-all backdrop-blur-sm",
-                isWishlisted ? "bg-gold text-background" : "bg-black/50 text-white hover:bg-black/70"
-              )}
-              aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-            >
-              <Heart className={cn("h-4 w-4", isWishlisted && "fill-current")} />
-            </button>
-            {onQuickView && (
-              <button
-                onClick={(e) => { e.preventDefault(); onQuickView(product); }}
-                className="w-9 h-9 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70 transition-all backdrop-blur-sm"
-                aria-label="Quick view"
-              >
-                <Eye className="h-4 w-4" />
-              </button>
+          {/* Wishlist — always visible on mobile, hover on desktop */}
+          <button
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggle(designId); }}
+            className={cn(
+              "absolute top-2 right-2 sm:top-3 sm:right-3 w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all z-10",
+              "sm:opacity-0 sm:group-hover:opacity-100",
+              isWishlisted
+                ? "bg-gold text-background sm:opacity-100"
+                : "bg-black/50 text-white hover:bg-black/70 backdrop-blur-sm"
             )}
-          </div>
+            aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+          >
+            <Heart className={cn("h-3.5 w-3.5 sm:h-4 sm:w-4", isWishlisted && "fill-current")} />
+          </button>
+
+          {/* Quick view — always visible on mobile, hover on desktop */}
+          {onQuickView && (
+            <button
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); onQuickView(product); }}
+              className={cn(
+                "absolute bottom-2 right-2 sm:bottom-3 sm:right-3 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70 transition-all backdrop-blur-sm z-10",
+                "sm:opacity-0 sm:group-hover:opacity-100"
+              )}
+              aria-label="Quick view"
+            >
+              <Eye className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            </button>
+          )}
         </div>
       </Link>
 
       {/* Info */}
-      <div className="mt-3 space-y-1.5">
+      <div className="mt-2 sm:mt-3 space-y-1">
         <Link to={href} className="block">
-          <p className="text-[10px] text-muted-foreground uppercase tracking-[0.12em]">
+          <p className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-[0.12em]">
             {productTypeLabel(product.type)}
           </p>
-          <h3 className="text-sm font-medium mt-0.5 group-hover:text-gold transition-colors line-clamp-1">
+          <h3 className="text-xs sm:text-sm font-medium mt-0.5 group-hover:text-gold transition-colors line-clamp-1">
             {product.title}
           </h3>
         </Link>
 
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-price">{formatPrice(product.price)}</span>
+          <span className="text-xs sm:text-sm font-medium text-price">{formatPrice(product.price)}</span>
           {product.compareAtPrice && (
-            <span className="text-xs text-muted-foreground line-through">{formatPrice(product.compareAtPrice)}</span>
+            <span className="text-[10px] sm:text-xs text-muted-foreground line-through">{formatPrice(product.compareAtPrice)}</span>
           )}
         </div>
 
@@ -103,7 +109,7 @@ export function ProductCard({ product, designSlug, onQuickView }: ProductCardPro
         {designHref && (
           <Link
             to={designHref}
-            className="inline-block text-[10px] uppercase tracking-wider text-muted-foreground hover:text-gold transition-colors mt-0.5"
+            className="inline-block text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground hover:text-gold transition-colors mt-0.5"
           >
             View design →
           </Link>
@@ -111,17 +117,17 @@ export function ProductCard({ product, designSlug, onQuickView }: ProductCardPro
 
         {/* Color dots */}
         {product.colors.length > 1 && (
-          <div className="flex items-center gap-1.5 pt-0.5">
+          <div className="flex items-center gap-1 pt-0.5">
             {product.colors.slice(0, 5).map((color) => (
               <span
                 key={color.name}
-                className="w-3 h-3 rounded-full border border-border/60 shrink-0"
+                className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full border border-border/60 shrink-0"
                 style={{ backgroundColor: color.hex }}
                 title={color.name}
               />
             ))}
             {product.colors.length > 5 && (
-              <span className="text-[10px] text-muted-foreground">+{product.colors.length - 5}</span>
+              <span className="text-[9px] sm:text-[10px] text-muted-foreground">+{product.colors.length - 5}</span>
             )}
           </div>
         )}

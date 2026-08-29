@@ -160,14 +160,47 @@
   background: #555;
 }
 
-/* Smooth image loading */
+/* Smooth image loading — opacity animates once the browser paints */
 img {
   transition: opacity 0.3s ease;
 }
-img[loading="lazy"] {
-  opacity: 0;
+
+/* iOS safe-area support */
+@supports (padding: env(safe-area-inset-bottom)) {
+  body {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
-img[loading="lazy"].loaded,
-img:not([loading="lazy"]) {
-  opacity: 1;
+
+/* Prevent horizontal overflow globally */
+html, body {
+  overflow-x: hidden;
+}
+
+/* Improve tap highlight on mobile */
+a, button, [role="button"], input, select, textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Better focus-visible for keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--brand-gold);
+  outline-offset: 2px;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Ensure minimum touch target size on mobile */
+@media (max-width: 768px) {
+  a, button, [role="button"] {
+    min-height: 44px;
+  }
 }

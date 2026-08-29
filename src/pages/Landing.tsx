@@ -48,21 +48,17 @@ function HeroSection() {
             </div>
 
             {/* Trust badges */}
-            <div className="flex items-center gap-6 mt-12 pt-8 border-t border-border/50">
-              <div>
-                <p className="text-lg font-display font-semibold">Premium</p>
-                <p className="text-xs text-muted-foreground">Quality Materials</p>
-              </div>
-              <div className="w-px h-8 bg-border/50" />
-              <div>
-                <p className="text-lg font-display font-semibold">Made to Order</p>
-                <p className="text-xs text-muted-foreground">Zero Waste</p>
-              </div>
-              <div className="w-px h-8 bg-border/50" />
-              <div>
-                <p className="text-lg font-display font-semibold">Worldwide</p>
-                <p className="text-xs text-muted-foreground">Shipping</p>
-              </div>
+            <div className="grid grid-cols-3 gap-4 sm:gap-6 mt-10 sm:mt-12 pt-6 sm:pt-8 border-t border-border/50">
+              {[
+                { title: "Premium", subtitle: "Quality Materials" },
+                { title: "Made to Order", subtitle: "Zero Waste" },
+                { title: "Worldwide", subtitle: "Shipping" },
+              ].map((badge, i) => (
+                <div key={i} className={i > 0 ? "border-l border-border/50 pl-4 sm:pl-6" : ""}>
+                  <p className="text-base sm:text-lg font-display font-semibold">{badge.title}</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground">{badge.subtitle}</p>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -288,8 +284,8 @@ function OneDesignSection() {
           </div>
 
           {/* Product grid */}
-          <div className="flex-1">
-            <div className="grid grid-cols-4 gap-3">
+          <div className="flex-1 w-full">
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-3">
               {displayTypes.map((p) => (
                 <Link
                   key={p.id}
@@ -510,7 +506,7 @@ function TrustSection() {
           <p className="text-label text-gold mb-3">Why FAYANITY</p>
           <h2 className="text-display text-3xl lg:text-4xl">Quality You Can Trust</h2>
         </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 lg:gap-6">
           {points.map((point) => (
             <div key={point.title} className="text-center">
               <div className="w-12 h-12 rounded-full bg-background border border-border/50 flex items-center justify-center mx-auto mb-4 text-gold">
@@ -570,7 +566,7 @@ function ReviewsSection() {
             Loved by the Community
           </h2>
         </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {reviews.map((review) => (
             <div
               key={review.name}
