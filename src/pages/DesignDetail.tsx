@@ -218,10 +218,29 @@ export default function DesignDetail() {
         <div className="grid lg:grid-cols-[1fr_420px] xl:grid-cols-[1fr_480px] gap-8 lg:gap-12 xl:gap-16">
 
           {/* ─── LEFT: Image Gallery ─── */}
-          <div className="space-y-3">
+          <div className="flex gap-3">
+            {/* Vertical thumbnail rail (desktop) */}
+            {images.length > 1 && (
+              <div className="hidden lg:flex flex-col gap-2 w-20 shrink-0">
+                {images.map((img, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActiveImage(i)}
+                    className={cn(
+                      "w-20 h-24 rounded-sm overflow-hidden bg-surface border-2 transition-all shrink-0",
+                      activeImage === i ? "border-foreground" : "border-transparent opacity-50 hover:opacity-80"
+                    )}
+                  >
+                    <img src={img} alt="" className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
+
             {/* Main image */}
-            <div
-              className="aspect-[3/4] lg:aspect-[4/5] rounded-sm overflow-hidden bg-surface relative cursor-zoom-in group"
+            <div className="flex-1 min-w-0">
+              <div
+                className="aspect-[3/4] lg:aspect-[4/5] rounded-sm overflow-hidden bg-surface relative cursor-zoom-in group"
               onClick={() => { setViewerIndex(activeImage); setViewerOpen(true); }}
               role="button"
               aria-label="View full image"
@@ -251,15 +270,15 @@ export default function DesignDetail() {
               )}
             </div>
 
-            {/* Thumbnails */}
+            {/* Horizontal thumbnails (mobile/tablet) */}
             {images.length > 1 && (
-              <div className="flex gap-2 overflow-x-auto scrollbar-none pb-1">
+              <div className="flex gap-2 overflow-x-auto scrollbar-none pb-1 mt-3 lg:hidden">
                 {images.map((img, i) => (
                   <button
                     key={i}
                     onClick={() => setActiveImage(i)}
                     className={cn(
-                      "w-16 h-20 lg:w-20 lg:h-24 rounded-sm overflow-hidden bg-surface border-2 transition-all shrink-0",
+                      "w-16 h-20 rounded-sm overflow-hidden bg-surface border-2 transition-all shrink-0",
                       activeImage === i ? "border-foreground" : "border-transparent opacity-50 hover:opacity-80"
                     )}
                   >
@@ -268,6 +287,7 @@ export default function DesignDetail() {
                 ))}
               </div>
             )}
+          </div>
           </div>
 
           {/* ─── RIGHT: Product Information ─── */}
@@ -306,12 +326,12 @@ export default function DesignDetail() {
               )}
             </div>
 
-            {/* ─── Product Type Switcher ─── */}
-            <div className="mb-6">
-              <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground mb-3">
-                Choose Your Product
+            {/* ─── Product Type Switcher (compact) ─── */}
+            <div className="mb-5">
+              <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground mb-2.5">
+                Product
               </p>
-              <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-4 gap-1.5">
+              <div className="flex gap-1.5 overflow-x-auto scrollbar-none pb-1 -mx-1 px-1">
                 {allDesignProducts.map((p) => {
                   const v = typeVisuals[p.type as ProductType];
                   const isActive = p.type === activeType;
@@ -320,14 +340,13 @@ export default function DesignDetail() {
                       key={p.type}
                       onClick={() => switchType(p.type as ProductType)}
                       className={cn(
-                        "flex flex-col items-center gap-1 py-3 px-1 rounded-sm border transition-all min-h-[60px]",
+                        "whitespace-nowrap px-3 py-2 text-[11px] font-medium rounded-sm border transition-all shrink-0",
                         isActive
                           ? "bg-foreground text-background border-foreground"
-                          : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/30 bg-surface/30"
+                          : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/30"
                       )}
                     >
-                      <span className="text-base leading-none">{v.icon}</span>
-                      <span className="text-[10px] font-medium leading-tight text-center">{v.shortLabel}</span>
+                      {v.label}
                     </button>
                   );
                 })}
@@ -502,19 +521,18 @@ export default function DesignDetail() {
         </div>
       </div>
 
-      {/* ─── Shop the Design (same design, many products) ─── */}
-      <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-        <div className="flex items-end justify-between mb-8">
-          <div>
-            <p className="text-[11px] uppercase tracking-[0.2em] text-gold mb-2">Shop the Design</p>
+      {/* ─── ONE DESIGN. EVERY PRODUCT. ─── */}
+      <div className="border-t border-border/50 bg-surface/20">
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+          <div className="text-center mb-10">
+            <p className="text-[11px] uppercase tracking-[0.2em] text-gold mb-2">One Design. Every Product.</p>
             <h2 className="font-display text-xl lg:text-2xl font-medium tracking-tight">
-              {design.name} Across the Collection
+              Love the design? Explore it across the collection.
             </h2>
           </div>
-        </div>
 
-        {/* Horizontal product family cards */}
-        <div className="flex gap-3 overflow-x-auto scrollbar-none pb-4 -mx-4 px-4 lg:mx-0 lg:px-0">
+          {/* Horizontal product family cards */}
+          <div className="flex gap-3 overflow-x-auto scrollbar-none pb-4 -mx-4 px-4 lg:mx-0 lg:px-0 justify-start lg:justify-center">
           {allDesignProducts.map((p) => {
             const v = typeVisuals[p.type as ProductType];
             const isActive = p.type === activeType;
@@ -534,6 +552,7 @@ export default function DesignDetail() {
                 </div>
                 <p className="text-[10px] font-medium text-center leading-tight">{v.shortLabel}</p>
                 <p className="text-[10px] text-muted-foreground">{formatPrice(p.price)}</p>
+                {isActive && <span className="text-[9px] text-gold font-medium">Selected</span>}
               </button>
             );
           })}
@@ -545,6 +564,7 @@ export default function DesignDetail() {
             <ProductCard key={p.id} product={p} designSlug={design.slug} />
           ))}
         </div>
+      </div>
       </div>
 
       {/* ─── Reviews ─── */}
