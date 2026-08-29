@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { ArrowLeft, Lock, ChevronDown, ChevronRight, CreditCard, Check } from "lucide-react";
+import { ArrowLeft, Lock, ChevronDown, ChevronRight, CreditCard, Check, Shield, Truck, RotateCcw } from "lucide-react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/data/mock";
@@ -51,6 +51,7 @@ export default function Checkout() {
   const [form, setForm] = useState<FormData>(initial);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [placing, setPlacing] = useState(false);
+  const [mobileSummaryOpen, setMobileSummaryOpen] = useState(false);
 
   const set = (field: keyof FormData, value: string | boolean) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -58,6 +59,7 @@ export default function Checkout() {
   };
 
   const shippingCost = form.deliveryMethod === "express" ? 12.99 : (totalPrice >= 50 ? 0 : 4.99);
+  const discount = 0;
   const total = totalPrice + shippingCost;
 
   const validateStep = (s: number): boolean => {
@@ -102,7 +104,18 @@ export default function Checkout() {
     setPlacing(true);
     setTimeout(() => {
       clearCart();
-      navigate("/order-confirmation", { state: { orderId: "FY-" + Math.floor(10000 + Math.random() * 90000), email: form.email } });
+      navigate("/order-confirmation", {
+        state: {
+          orderId: "FY-" + Math.floor(10000 + Math.random() * 90000),
+          email: form.email,
+          items: items,
+          shippingAddress: { firstName: form.firstName, lastName: form.lastName, address: form.address, apartment: form.apartment, city: form.city, state: form.state, postalCode: form.postalCode, country: form.country },
+          deliveryMethod: form.deliveryMethod,
+          subtotal: totalPrice,
+          shippingCost,
+          total,
+        },
+      });
     }, 2000);
   };
 
@@ -111,6 +124,9 @@ export default function Checkout() {
       <SiteLayout>
         <div className="min-h-[60vh] flex items-center justify-center px-4">
           <div className="text-center">
+            <div className="w-16 h-16 rounded-full bg-surface flex items-center justify-center mx-auto mb-5">
+              <ShoppingBag className="h-7 w-7 text-muted-foreground/30" />
+            </div>
             <p className="text-sm text-muted-foreground mb-4">Your cart is empty</p>
             <Link to="/designs" className="text-sm font-medium text-gold hover:text-gold/80 transition-colors underline underline-offset-2">
               Browse Designs →
@@ -120,6 +136,60 @@ export default function Checkout() {
       </SiteLayout>
     );
   }
+
+  const OrderSummaryContent = () => (
+    <div className="space-y-3">
+      <div className="space-y-3 mb-4 max-h-[240px] overflow-y-auto">
+        {items.map((item) => (
+          <div key={`${item.productId}-${item.color}-${item.size}`} className="flex gap-3">
+            <div className="w-14 h-16 rounded-sm bg-surface overflow-hidden shrink-0 relative">
+              <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-muted-foreground text-background text-[9px] font-medium rounded-full flex items-center justify-center">{item.quantity}</span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{item.designName}</p>
+              <p className="text-xs font-medium truncate">{item.title}</p>
+              <p className="text-[10px] text-muted-foreground">{item.color}{item.size ? ` · ${item.size}` : ""}</p>
+            </div>
+            <span className="text-xs font-medium text-price shrink-0">{formatPrice(item.price * item.quantity)}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="border-t border-border/50 pt-3 space-y-2">
+        <div className="flex justify-between text-xs">
+          <span className="text-muted-foreground">Subtotal ({totalItems} items)</span>
+          <span>{formatPrice(totalPrice)}</span>
+        </div>
+        <div className="flex justify-between text-xs">
+          <span className="text-muted-foreground">Shipping</span>
+          <span className={cn(shippingCost === 0 && "text-green-500")}>{shippingCost === 0 ? "Free" : formatPrice(shippingCost)}</span>
+        </div>
+        <div className="flex justify-between text-xs">
+          <span className="text-muted-foreground">Tax / VAT</span>
+          <span className="text-muted-foreground text-[11px]">Calculated at next step</span>
+        </div>
+        <div className="flex justify-between text-sm font-medium pt-2 border-t border-border/50">
+          <span>Total</span>
+          <span className="text-price">{formatPrice(total)}</span>
+        </div>
+      </div>
+
+      {/* Trust */}
+      <div className="pt-3 border-t border-border/50 grid grid-cols-3 gap-2">
+        {[
+          { icon: Shield, label: "Secure" },
+          { icon: Truck, label: "Tracked" },
+          { icon: RotateCcw, label: "Returns" },
+        ].map(({ icon: Icon, label }) => (
+          <div key={label} className="text-center">
+            <Icon className="h-3.5 w-3.5 text-muted-foreground mx-auto mb-0.5" />
+            <p className="text-[9px] text-muted-foreground">{label}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 
   return (
     <SiteLayout>
@@ -173,6 +243,10 @@ export default function Checkout() {
                 <FormField label="Phone (optional)" htmlFor="phone">
                   <input id="phone" type="tel" value={form.phone} onChange={(e) => set("phone", e.target.value)} placeholder="+49 ..." className={inputClass} />
                 </FormField>
+                <label className="flex items-center gap-2 text-xs text-muted-foreground cursor-pointer min-h-[44px]">
+                  <input type="checkbox" checked={true} readOnly className="w-4 h-4 rounded border-border bg-surface accent-foreground" />
+                  Email me order updates
+                </label>
                 <div className="flex justify-end pt-2">
                   <button onClick={nextStep} className="px-8 h-11 bg-foreground text-background text-xs font-semibold uppercase tracking-wider rounded-sm hover:bg-foreground/90 transition-colors min-h-[44px]">
                     Continue to Shipping
@@ -265,7 +339,7 @@ export default function Checkout() {
                 {/* Payment methods */}
                 <div className="grid grid-cols-4 gap-2 mb-4">
                   {["Card", "Apple Pay", "Google Pay", "PayPal"].map((m, i) => (
-                    <button key={m} className={cn("py-3 text-[11px] font-medium border rounded-sm transition-all text-center", i === 0 ? "border-foreground bg-surface/30" : "border-border text-muted-foreground hover:border-foreground/30")}>
+                    <button key={m} className={cn("py-3 text-[11px] font-medium border rounded-sm transition-all text-center min-h-[44px]", i === 0 ? "border-foreground bg-surface/30" : "border-border text-muted-foreground hover:border-foreground/30")}>
                       {m}
                     </button>
                   ))}
@@ -379,7 +453,7 @@ export default function Checkout() {
                       I agree to the <Link to="/terms" className="text-foreground hover:underline">Terms & Conditions</Link> and acknowledge the <Link to="/privacy" className="text-foreground hover:underline">Privacy Policy</Link>.
                     </span>
                   </label>
-                  {errors.termsAccepted && <p className="text-[11px] text-red-500 mt-1.5">{errors.termsAccepted}</p>}
+                  {errors.termsAccepted && <p className="text-[11px] text-red-500 mt-1.5" role="alert">{errors.termsAccepted}</p>}
                 </div>
 
                 <div className="flex items-center justify-between pt-2">
@@ -403,51 +477,39 @@ export default function Checkout() {
             )}
           </div>
 
-          {/* Sticky Order Summary */}
+          {/* Sticky Order Summary (desktop) */}
           <div className="hidden lg:block">
             <div className="sticky top-24 border border-border/50 rounded-sm p-5">
               <h2 className="text-sm font-medium mb-4">Your Order</h2>
-              <div className="space-y-3 mb-4 max-h-[300px] overflow-y-auto">
-                {items.map((item) => (
-                  <div key={`${item.productId}-${item.color}-${item.size}`} className="flex gap-3">
-                    <div className="w-14 h-16 rounded-sm bg-surface overflow-hidden shrink-0 relative">
-                      <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
-                      <span className="absolute -top-1 -right-1 w-4 h-4 bg-muted-foreground text-background text-[9px] font-medium rounded-full flex items-center justify-center">{item.quantity}</span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{item.designName}</p>
-                      <p className="text-xs font-medium truncate">{item.title}</p>
-                      <p className="text-[10px] text-muted-foreground">{item.color}{item.size ? ` · ${item.size}` : ""}</p>
-                    </div>
-                    <span className="text-xs font-medium text-price shrink-0">{formatPrice(item.price * item.quantity)}</span>
-                  </div>
-                ))}
-              </div>
+              <OrderSummaryContent />
+            </div>
+          </div>
+        </div>
 
-              <div className="border-t border-border/50 pt-3 space-y-2">
-                <div className="flex justify-between text-xs">
-                  <span className="text-muted-foreground">Subtotal ({totalItems} items)</span>
-                  <span>{formatPrice(totalPrice)}</span>
-                </div>
-                <div className="flex justify-between text-xs">
-                  <span className="text-muted-foreground">Shipping</span>
-                  <span className={cn(shippingCost === 0 && "text-green-500")}>{shippingCost === 0 ? "Free" : formatPrice(shippingCost)}</span>
-                </div>
-                <div className="flex justify-between text-xs">
-                  <span className="text-muted-foreground">Tax / VAT</span>
-                  <span className="text-muted-foreground">Calculated at next step</span>
-                </div>
-                <div className="flex justify-between text-sm font-medium pt-2 border-t border-border/50">
-                  <span>Total</span>
-                  <span className="text-price">{formatPrice(total)}</span>
-                </div>
-              </div>
+        {/* Mobile collapsible order summary */}
+        <div className="lg:hidden mt-6 border border-border/50 rounded-sm overflow-hidden">
+          <button
+            onClick={() => setMobileSummaryOpen(!mobileSummaryOpen)}
+            className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium min-h-[44px]"
+          >
+            <span className="flex items-center gap-2">
+              Order Summary
+              <span className="text-[11px] text-muted-foreground">({totalItems} {totalItems === 1 ? "item" : "items"})</span>
+            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium text-price">{formatPrice(total)}</span>
+              <ChevronDown className={cn("h-4 w-4 text-muted-foreground transition-transform duration-200", mobileSummaryOpen && "rotate-180")} />
+            </div>
+          </button>
+          <div className={cn("transition-all duration-300 overflow-hidden", mobileSummaryOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0")}>
+            <div className="px-4 pb-4 border-t border-border/50 pt-3">
+              <OrderSummaryContent />
             </div>
           </div>
         </div>
 
         {/* Mobile sticky CTA */}
-        <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-background border-t border-border/60 px-4 py-3">
+        <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-background border-t border-border/60 px-4 py-3 safe-area-pb">
           <div className="flex items-center gap-3">
             <span className="text-sm font-medium text-price shrink-0">{formatPrice(total)}</span>
             {step === 3 ? (
@@ -470,5 +532,13 @@ export default function Checkout() {
         </div>
       </div>
     </SiteLayout>
+  );
+}
+
+function ShoppingBag(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" /><path d="M3 6h18" /><path d="M16 10a4 4 0 0 1-8 0" />
+    </svg>
   );
 }

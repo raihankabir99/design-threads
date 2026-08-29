@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router";
-import { Minus, Plus, X, ShoppingBag, ArrowRight, ArrowLeft, Tag, Bookmark, ChevronRight } from "lucide-react";
+import { Minus, Plus, X, ShoppingBag, ArrowRight, ArrowLeft, Tag, Bookmark, ChevronRight, ChevronDown, Shield, Truck, RotateCcw } from "lucide-react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { useCart } from "@/context/CartContext";
 import { formatPrice, designs } from "@/data/mock";
@@ -23,6 +23,8 @@ export default function CartPage() {
   const [promoError, setPromoError] = useState(false);
   const [shipCountry, setShipCountry] = useState("DE");
   const [shipResult, setShipResult] = useState<{ days: string; cost: number } | null>(null);
+  const [summaryOpen, setSummaryOpen] = useState(false);
+  const [undoItem, setUndoItem] = useState<CartItem | null>(null);
 
   const discount = promoApplied ? totalPrice * 0.1 : 0;
   const shipping = shipResult ? shipResult.cost : (totalPrice >= 50 ? 0 : 4.99);
@@ -60,6 +62,29 @@ export default function CartPage() {
     setSavedItems((prev) => prev.filter((i) => i.productId !== item.productId));
   };
 
+  const handleRemove = (item: CartItem) => {
+    removeItem(item.productId);
+    setUndoItem(item);
+    setTimeout(() => setUndoItem(null), 4000);
+  };
+
+  const handleUndo = () => {
+    if (undoItem) {
+      addItem({
+        productId: undoItem.productId, designId: undoItem.designId, type: undoItem.type,
+        designName: undoItem.designName, title: undoItem.title, color: undoItem.color,
+        colorHex: undoItem.colorHex, size: undoItem.size, price: undoItem.price, image: undoItem.image,
+      });
+      setUndoItem(null);
+    }
+  };
+
+  // Group items by design
+  const grouped = items.reduce<Record<string, CartItem[]>>((acc, item) => {
+    (acc[item.designId] = acc[item.designId] || []).push(item);
+    return acc;
+  }, {});
+
   const cartDesignIds = [...new Set(items.map((i) => i.designId))];
   const recommended = designs.filter((d) => !cartDesignIds.includes(d.id)).slice(0, 4);
 
@@ -70,13 +95,13 @@ export default function CartPage() {
         <nav className="flex items-center gap-1.5 text-[11px] text-muted-foreground" aria-label="Breadcrumb">
           <Link to="/" className="hover:text-foreground transition-colors">Home</Link>
           <ChevronRight className="h-3 w-3" />
-          <span className="text-foreground">Cart</span>
+          <span className="text-foreground">Bag</span>
         </nav>
       </div>
 
       <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
         <div className="max-w-5xl mx-auto">
-          <h1 className="font-display text-2xl lg:text-3xl font-medium tracking-tight mb-1">Your Cart</h1>
+          <h1 className="font-display text-2xl lg:text-3xl font-medium tracking-tight mb-1">Your Bag</h1>
           <p className="text-sm text-muted-foreground mb-8 lg:mb-12">
             {totalItems > 0 ? `${totalItems} ${totalItems === 1 ? "item" : "items"}` : "No items yet"}
           </p>
@@ -84,17 +109,19 @@ export default function CartPage() {
           {items.length === 0 && savedItems.length === 0 ? (
             /* Empty Cart */
             <div className="text-center py-20">
-              <ShoppingBag className="h-16 w-16 text-muted-foreground/20 mx-auto mb-6" />
-              <h2 className="font-display text-xl font-medium mb-2">Your Cart Is Empty</h2>
+              <div className="w-20 h-20 rounded-full bg-surface flex items-center justify-center mx-auto mb-6">
+                <ShoppingBag className="h-9 w-9 text-muted-foreground/30" />
+              </div>
+              <h2 className="font-display text-xl font-medium mb-2">Your bag is waiting</h2>
               <p className="text-sm text-muted-foreground mb-8 max-w-md mx-auto leading-relaxed">
                 Discover designs created for everyday expression. Find something you love and make it yours.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                <Link to="/shop" className="px-6 py-3 bg-foreground text-background text-xs font-semibold uppercase tracking-wider rounded-sm hover:bg-foreground/90 transition-colors min-h-[44px] flex items-center">
-                  Explore Shop
-                </Link>
-                <Link to="/designs" className="px-6 py-3 border border-border text-xs font-medium uppercase tracking-wider text-muted-foreground hover:text-foreground hover:border-foreground/30 rounded-sm transition-colors min-h-[44px] flex items-center">
+                <Link to="/designs" className="px-6 py-3 bg-foreground text-background text-xs font-semibold uppercase tracking-wider rounded-sm hover:bg-foreground/90 transition-colors min-h-[44px] flex items-center">
                   Explore Designs
+                </Link>
+                <Link to="/shop" className="px-6 py-3 border border-border text-xs font-medium uppercase tracking-wider text-muted-foreground hover:text-foreground hover:border-foreground/30 rounded-sm transition-colors min-h-[44px] flex items-center">
+                  Shop Best Sellers
                 </Link>
               </div>
             </div>
@@ -103,46 +130,77 @@ export default function CartPage() {
               {/* Left: Items */}
               <div>
                 {items.length > 0 && (
-                  <ul className="border border-border/50 rounded-sm divide-y divide-border/50">
-                    {items.map((item) => (
-                      <li key={`${item.productId}-${item.color}-${item.size}`} className="flex gap-4 p-4 sm:p-5">
-                        <Link
-                          to={`/designs/${designs.find((d) => d.id === item.designId)?.slug || ""}?type=${item.type}`}
-                          className="w-20 h-24 sm:w-24 sm:h-28 rounded-sm bg-surface overflow-hidden shrink-0"
-                        >
-                          <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
-                        </Link>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between gap-2">
-                            <div>
-                              <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{item.designName}</p>
-                              <p className="text-sm font-medium mt-0.5">{item.title}</p>
-                              <div className="flex items-center gap-2 mt-1.5">
-                                <span className="w-3 h-3 rounded-full border border-border/50 shrink-0" style={{ backgroundColor: item.colorHex }} />
-                                <span className="text-[11px] text-muted-foreground">{item.color}</span>
-                                {item.size && <span className="text-[11px] text-muted-foreground">· {item.size}</span>}
+                  <div className="border border-border/50 rounded-sm divide-y divide-border/50">
+                    {Object.entries(grouped).map(([designId, groupItems]) => {
+                      const design = designs.find((d) => d.id === designId);
+                      return (
+                        <div key={designId}>
+                          {/* Design group header */}
+                          {groupItems.length > 1 && (
+                            <div className="px-5 pt-4 pb-2 bg-surface/30">
+                              <p className="text-[10px] uppercase tracking-[0.15em] text-gold font-medium">{design?.name || "Design"}</p>
+                              <p className="text-[10px] text-muted-foreground mt-0.5">{groupItems.length} items</p>
+                            </div>
+                          )}
+                          {groupItems.map((item) => (
+                            <div key={`${item.productId}-${item.color}-${item.size}`} className="flex gap-4 p-4 sm:p-5">
+                              <Link
+                                to={`/designs/${designs.find((d) => d.id === item.designId)?.slug || ""}?type=${item.type}`}
+                                className="w-20 h-24 sm:w-24 sm:h-28 rounded-sm bg-surface overflow-hidden shrink-0"
+                              >
+                                <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                              </Link>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-start justify-between gap-2">
+                                  <div>
+                                    {groupItems.length === 1 && (
+                                      <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{item.designName}</p>
+                                    )}
+                                    <p className="text-sm font-medium mt-0.5">{item.title}</p>
+                                    <div className="flex items-center gap-2 mt-1.5">
+                                      <span className="w-3 h-3 rounded-full border border-border/50 shrink-0" style={{ backgroundColor: item.colorHex }} />
+                                      <span className="text-[11px] text-muted-foreground">{item.color}</span>
+                                      {item.size && <span className="text-[11px] text-muted-foreground">· {item.size}</span>}
+                                    </div>
+                                  </div>
+                                  <button onClick={() => handleRemove(item)} className="text-muted-foreground hover:text-foreground transition-colors shrink-0 p-1" aria-label="Remove">
+                                    <X className="h-4 w-4" />
+                                  </button>
+                                </div>
+                                <div className="flex items-center justify-between mt-3">
+                                  <div className="flex items-center border border-border/60 rounded-sm">
+                                    <button onClick={() => updateQuantity(item.productId, Math.max(1, item.quantity - 1))} className="w-9 h-9 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors" aria-label="Decrease">
+                                      <Minus className="h-3.5 w-3.5" />
+                                    </button>
+                                    <span className="w-9 h-9 flex items-center justify-center text-sm font-medium tabular-nums">{item.quantity}</span>
+                                    <button onClick={() => updateQuantity(item.productId, item.quantity + 1)} className="w-9 h-9 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors" aria-label="Increase">
+                                      <Plus className="h-3.5 w-3.5" />
+                                    </button>
+                                  </div>
+                                  <div className="flex items-center gap-3">
+                                    <button onClick={() => handleSaveForLater(item)} className="text-muted-foreground hover:text-foreground transition-colors p-1" aria-label="Save for later">
+                                      <Bookmark className="h-4 w-4" />
+                                    </button>
+                                    <span className="text-sm font-medium text-price">{formatPrice(item.price * item.quantity)}</span>
+                                  </div>
+                                </div>
                               </div>
                             </div>
-                            <button onClick={() => removeItem(item.productId)} className="text-muted-foreground hover:text-foreground transition-colors shrink-0" aria-label="Remove">
-                              <X className="h-4 w-4" />
-                            </button>
-                          </div>
-                          <div className="flex items-center justify-between mt-3">
-                            <div className="flex items-center border border-border/60 rounded-sm">
-                              <button onClick={() => updateQuantity(item.productId, item.quantity - 1)} className="w-9 h-9 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors" aria-label="Decrease">
-                                <Minus className="h-3.5 w-3.5" />
-                              </button>
-                              <span className="w-9 h-9 flex items-center justify-center text-sm font-medium tabular-nums">{item.quantity}</span>
-                              <button onClick={() => updateQuantity(item.productId, item.quantity + 1)} className="w-9 h-9 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors" aria-label="Increase">
-                                <Plus className="h-3.5 w-3.5" />
-                              </button>
-                            </div>
-                            <span className="text-sm font-medium text-price">{formatPrice(item.price * item.quantity)}</span>
-                          </div>
+                          ))}
                         </div>
-                      </li>
-                    ))}
-                  </ul>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Undo toast */}
+                {undoItem && (
+                  <div className="mt-3 px-4 py-3 bg-surface/50 rounded-sm flex items-center justify-between">
+                    <p className="text-xs text-muted-foreground">Item removed</p>
+                    <button onClick={handleUndo} className="text-xs text-foreground font-medium flex items-center gap-1 hover:underline">
+                      <RotateCcw className="h-3 w-3" /> Undo
+                    </button>
+                  </div>
                 )}
 
                 {/* Saved for later */}
@@ -171,7 +229,7 @@ export default function CartPage() {
                 {/* Actions */}
                 <div className="flex items-center justify-between mt-6">
                   <button onClick={clearCart} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-                    Clear Cart
+                    Clear Bag
                   </button>
                   <Link to="/shop" className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
                     <ArrowLeft className="h-3 w-3" /> Continue Shopping
@@ -281,6 +339,20 @@ export default function CartPage() {
                         </p>
                       </div>
                     )}
+                  </div>
+
+                  {/* Trust */}
+                  <div className="pt-3 border-t border-border/50 grid grid-cols-3 gap-2">
+                    {[
+                      { icon: Shield, label: "Secure\nCheckout" },
+                      { icon: Truck, label: "International\nDelivery" },
+                      { icon: RotateCcw, label: "30-Day\nReturns" },
+                    ].map(({ icon: Icon, label }) => (
+                      <div key={label} className="text-center">
+                        <Icon className="h-4 w-4 text-muted-foreground mx-auto mb-1" />
+                        <p className="text-[9px] text-muted-foreground leading-tight whitespace-pre-line">{label}</p>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>

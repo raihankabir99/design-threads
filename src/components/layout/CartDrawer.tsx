@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router";
-import { X, Minus, Plus, ShoppingBag, ArrowRight, Bookmark, Tag, Undo2 } from "lucide-react";
+import { X, Minus, Plus, ShoppingBag, ArrowRight, Bookmark, Tag, Undo2, Check } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { cn } from "@/lib/utils";
 import { formatPrice, designs } from "@/data/mock";
 import type { CartItem } from "@/data/types";
 
 export function CartDrawer() {
-  const { items, isOpen, setIsOpen, removeItem, updateQuantity, addItem, totalPrice, totalItems } = useCart();
+  const { items, isOpen, setIsOpen, removeItem, updateQuantity, addItem, totalPrice, totalItems, lastAddedItem, clearLastAdded } = useCart();
   const addItemRef = useRef(addItem);
   addItemRef.current = addItem;
 
@@ -113,7 +113,7 @@ export function CartDrawer() {
         <div className="flex items-center justify-between px-5 h-16 border-b border-border/50 shrink-0">
           <div className="flex items-center gap-2">
             <ShoppingBag className="h-4 w-4" />
-            <span className="text-sm font-medium">Your Cart</span>
+            <span className="text-sm font-medium">Your Bag</span>
             {totalItems > 0 && (
               <span className="text-[11px] text-muted-foreground">({totalItems} {totalItems === 1 ? "item" : "items"})</span>
             )}
@@ -126,63 +126,102 @@ export function CartDrawer() {
         {/* Content */}
         <div className="flex-1 overflow-y-auto">
           {items.length === 0 && savedItems.length === 0 ? (
+            /* Empty Cart */
             <div className="flex flex-col items-center justify-center h-full text-center px-6">
-              <ShoppingBag className="h-12 w-12 text-muted-foreground/30 mb-4" />
-              <p className="text-sm font-medium mb-1">Your cart is empty</p>
-              <p className="text-xs text-muted-foreground mb-6 leading-relaxed">
-                Discover designs created for everyday expression.
+              <div className="w-20 h-20 rounded-full bg-surface flex items-center justify-center mb-5">
+                <ShoppingBag className="h-8 w-8 text-muted-foreground/30" />
+              </div>
+              <p className="font-display text-lg font-medium mb-1.5">Your bag is waiting</p>
+              <p className="text-xs text-muted-foreground mb-8 leading-relaxed max-w-[220px]">
+                Discover a design and make it yours.
               </p>
-              <div className="flex flex-col gap-2 w-full max-w-[200px]">
-                <Link to="/shop" onClick={() => setIsOpen(false)} className="flex items-center justify-center h-10 bg-foreground text-background text-xs font-medium rounded-sm hover:bg-foreground/90 transition-colors">
-                  Explore Shop
-                </Link>
-                <Link to="/designs" onClick={() => setIsOpen(false)} className="flex items-center justify-center h-10 border border-border text-xs text-muted-foreground hover:text-foreground hover:border-foreground/30 rounded-sm transition-colors">
+              <div className="flex flex-col gap-2.5 w-full max-w-[220px]">
+                <Link to="/designs" onClick={() => setIsOpen(false)} className="flex items-center justify-center h-11 bg-foreground text-background text-xs font-semibold uppercase tracking-wider rounded-sm hover:bg-foreground/90 transition-colors">
                   Explore Designs
+                </Link>
+                <Link to="/shop" onClick={() => setIsOpen(false)} className="flex items-center justify-center h-11 border border-border text-xs font-medium uppercase tracking-wider text-muted-foreground hover:text-foreground hover:border-foreground/30 rounded-sm transition-colors">
+                  Shop Best Sellers
                 </Link>
               </div>
             </div>
           ) : (
             <div className="divide-y divide-border/50">
-              {items.map((item) => (
-                <div key={`${item.productId}-${item.color}-${item.size}`} className="flex gap-4 p-5">
-                  <div className="w-20 h-24 rounded-sm bg-surface overflow-hidden shrink-0">
-                    <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+              {/* Added to bag toast */}
+              {lastAddedItem && (
+                <div className="px-5 py-3 bg-green-500/5 border-b border-green-500/20 flex items-center gap-3 animate-in slide-in-from-top-2 duration-300">
+                  <div className="w-6 h-6 rounded-full bg-green-500/10 flex items-center justify-center shrink-0">
+                    <Check className="h-3.5 w-3.5 text-green-500" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{item.designName}</p>
-                        <p className="text-sm font-medium mt-0.5">{item.title}</p>
-                        <div className="flex items-center gap-2 mt-1.5">
-                          <span className="w-3 h-3 rounded-full border border-border/50 shrink-0" style={{ backgroundColor: item.colorHex }} />
-                          <span className="text-[11px] text-muted-foreground">{item.color}</span>
-                          {item.size && <span className="text-[11px] text-muted-foreground">· {item.size}</span>}
+                    <p className="text-xs font-medium">Added to your bag</p>
+                    <p className="text-[11px] text-muted-foreground truncate">{lastAddedItem.title} · {lastAddedItem.color}</p>
+                  </div>
+                  <button onClick={clearLastAdded} className="text-muted-foreground hover:text-foreground transition-colors shrink-0">
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              )}
+
+              {/* Cart items */}
+              {items.map((item, idx) => {
+                const showDesignGroup = idx === 0 || items[idx - 1]?.designId !== item.designId;
+                const sameDesignCount = items.filter((i) => i.designId === item.designId).length;
+                return (
+                  <div key={`${item.productId}-${item.color}-${item.size}`}>
+                    {/* Design group header */}
+                    {showDesignGroup && (
+                      <div className="px-5 pt-4 pb-1.5">
+                        <p className="text-[10px] uppercase tracking-[0.15em] text-gold font-medium">{item.designName}</p>
+                        {sameDesignCount > 1 && (
+                          <p className="text-[10px] text-muted-foreground mt-0.5">{sameDesignCount} items from this design</p>
+                        )}
+                      </div>
+                    )}
+                    {/* Item */}
+                    <div className="flex gap-4 px-5 pb-4 pt-2">
+                      <Link
+                        to={`/designs/${designs.find((d) => d.id === item.designId)?.slug || ""}?type=${item.type}`}
+                        onClick={() => setIsOpen(false)}
+                        className="w-[72px] h-[88px] rounded-sm bg-surface overflow-hidden shrink-0"
+                      >
+                        <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                      </Link>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <p className="text-sm font-medium">{item.title}</p>
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className="w-3 h-3 rounded-full border border-border/50 shrink-0" style={{ backgroundColor: item.colorHex }} />
+                              <span className="text-[11px] text-muted-foreground">{item.color}</span>
+                              {item.size && <span className="text-[11px] text-muted-foreground">· {item.size}</span>}
+                            </div>
+                          </div>
+                          <button onClick={() => handleRemove(item)} className="text-muted-foreground hover:text-foreground transition-colors shrink-0 mt-0.5 p-1" aria-label="Remove item">
+                            <X className="h-4 w-4" />
+                          </button>
                         </div>
-                      </div>
-                      <button onClick={() => handleRemove(item)} className="text-muted-foreground hover:text-foreground transition-colors shrink-0 mt-0.5" aria-label="Remove item">
-                        <X className="h-4 w-4" />
-                      </button>
-                    </div>
-                    <div className="flex items-center justify-between mt-3">
-                      <div className="flex items-center border border-border/60 rounded-sm">
-                        <button onClick={() => updateQuantity(item.productId, item.quantity - 1)} className="w-8 h-8 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors" aria-label="Decrease">
-                          <Minus className="h-3 w-3" />
-                        </button>
-                        <span className="w-8 h-8 flex items-center justify-center text-xs font-medium tabular-nums">{item.quantity}</span>
-                        <button onClick={() => updateQuantity(item.productId, item.quantity + 1)} className="w-8 h-8 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors" aria-label="Increase">
-                          <Plus className="h-3 w-3" />
-                        </button>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <button onClick={() => handleSaveForLater(item)} className="text-[11px] text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
-                          <Bookmark className="h-3 w-3" /> Save
-                        </button>
-                        <span className="text-sm font-medium text-price">{formatPrice(item.price * item.quantity)}</span>
+                        <div className="flex items-center justify-between mt-3">
+                          <div className="flex items-center border border-border/60 rounded-sm">
+                            <button onClick={() => updateQuantity(item.productId, Math.max(1, item.quantity - 1))} className="w-8 h-8 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors" aria-label="Decrease">
+                              <Minus className="h-3 w-3" />
+                            </button>
+                            <span className="w-8 h-8 flex items-center justify-center text-xs font-medium tabular-nums">{item.quantity}</span>
+                            <button onClick={() => updateQuantity(item.productId, item.quantity + 1)} className="w-8 h-8 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors" aria-label="Increase">
+                              <Plus className="h-3 w-3" />
+                            </button>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <button onClick={() => handleSaveForLater(item)} className="text-muted-foreground hover:text-foreground transition-colors p-1" aria-label="Save for later">
+                              <Bookmark className="h-3.5 w-3.5" />
+                            </button>
+                            <span className="text-sm font-medium text-price">{formatPrice(item.price * item.quantity)}</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
 
               {/* Undo toast */}
               {undoItem && (
@@ -206,7 +245,7 @@ export function CartDrawer() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-medium truncate">{item.title}</p>
-                          <p className="text-[10px] text-muted-foreground">{formatPrice(item.price)}</p>
+                          <p className="text-[10px] text-muted-foreground">{item.color}{item.size ? ` · ${item.size}` : ""} · {formatPrice(item.price)}</p>
                         </div>
                         <button onClick={() => handleMoveToCart(item)} className="text-[11px] text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2">
                           Move to Cart
@@ -222,7 +261,7 @@ export function CartDrawer() {
                 {!promoApplied ? (
                   <div>
                     <p className="text-[11px] uppercase tracking-wider text-muted-foreground mb-2 flex items-center gap-1.5">
-                      <Tag className="h-3 w-3" /> Promo Code
+                      <Tag className="h-3 w-3" /> Have a promo code?
                     </p>
                     <div className="flex gap-2">
                       <input
@@ -317,7 +356,7 @@ export function CartDrawer() {
               onClick={() => setIsOpen(false)}
               className="flex items-center justify-center w-full h-10 text-xs text-muted-foreground hover:text-foreground transition-colors"
             >
-              View Cart
+              View Bag
             </Link>
           </div>
         )}
