@@ -32,14 +32,22 @@ const footerSections = [
     links: [
       { label: "FAQ", href: "/faq" },
       { label: "Shipping Info", href: "/shipping" },
-      { label: "Returns", href: "/returns" },
+      { label: "Returns & Refunds", href: "/returns" },
       { label: "Contact Us", href: "/contact" },
-      { label: "Order Tracking", href: "/account" },
+      { label: "Order Tracking", href: "/track-order" },
+    ],
+  },
+  {
+    title: "About",
+    links: [
+      { label: "Our Story", href: "/about" },
+      { label: "Design Philosophy", href: "/about" },
     ],
   },
   {
     title: "Legal",
     links: [
+      { label: "Legal Center", href: "/legal" },
       { label: "Privacy Policy", href: "/privacy" },
       { label: "Terms & Conditions", href: "/terms" },
       { label: "Cookie Policy", href: "/cookies" },
