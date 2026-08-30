@@ -1,21 +1,150 @@
 import type { Design, Product, Collection, BlogPost, ProductType, ProductColor } from "./types";
 
-// --- Demo image generators using Picsum (free, fast, deterministic) ---
+// --- Contextual demo images ---
+// Design images: themed Unsplash photos matching each design's visual identity
+// Product images: styled SVG mockups shaped like the actual product type
+// Collection images: thematic lifestyle photos
+
+const designImages: Record<string, string> = {
+  "midnight-lion": "https://images.unsplash.com/photo-1614027164847-1b28cfe1df60?w=800&h=800&fit=crop&crop=center",
+  "neon-tokyo": "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&h=800&fit=crop&crop=center",
+  "desert-rose": "https://images.unsplash.com/photo-1490750967868-88aa4f44baee?w=800&h=800&fit=crop&crop=center",
+  "concrete-jungle": "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&h=800&fit=crop&crop=center",
+  "ocean-drift": "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=800&h=800&fit=crop&crop=center",
+  "wild-geometry": "https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=800&h=800&fit=crop&crop=center",
+  "solar-flare": "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=800&h=800&fit=crop&crop=center",
+  "shadow-botanical": "https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=800&h=800&fit=crop&crop=center",
+  "nordic-lines": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=800&fit=crop&crop=center",
+  "after-dark": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&h=800&fit=crop&crop=center",
+  "modern-heritage": "https://images.unsplash.com/photo-1461360228754-6e81c478b882?w=800&h=800&fit=crop&crop=center",
+  "sunday-studio": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&h=800&fit=crop&crop=center",
+};
+
+const productMockups: Record<string, { bg: string; shape: string; label: string }> = {
+  "t-shirt": { bg: "#1a1a1a", shape: "tshirt", label: "T-Shirt" },
+  "hoodie": { bg: "#222222", shape: "hoodie", label: "Hoodie" },
+  "sweatshirt": { bg: "#2a2a2a", shape: "sweatshirt", label: "Sweatshirt" },
+  "tote-bag": { bg: "#e8dcc8", shape: "tote", label: "Tote Bag" },
+  "mug": { bg: "#f5f5f0", shape: "mug", label: "Mug" },
+  "phone-case": { bg: "#111111", shape: "phone", label: "Phone Case" },
+  "cap": { bg: "#1a1a1a", shape: "cap", label: "Cap" },
+  "poster": { bg: "#0a0a0a", shape: "poster", label: "Poster" },
+  "sticker": { bg: "#ffffff", shape: "sticker", label: "Sticker" },
+  "notebook": { bg: "#2c2c2c", shape: "notebook", label: "Notebook" },
+  "cushion": { bg: "#e8e0d4", shape: "cushion", label: "Cushion" },
+  "kids-t-shirt": { bg: "#2a2a2a", shape: "tshirt", label: "Kids Tee" },
+  "baby-onesie": { bg: "#f0ebe4", shape: "onesie", label: "Baby Onesie" },
+};
+
+function productSvgDataUri(type: string, designName: string): string {
+  const mockup = productMockups[type] || productMockups["t-shirt"];
+  const textColor = mockup.bg === "#ffffff" || mockup.bg === "#f5f5f0" || mockup.bg === "#e8dcc8" || mockup.bg === "#e8e0d4" || mockup.bg === "#f0ebe4"
+    ? "#333333" : "#ffffff";
+  const accentColor = "#c9a96e";
+  const designShort = designName.length > 12 ? designName.substring(0, 12) + "…" : designName;
+
+  const shapes: Record<string, string> = {
+    tshirt: `<path d="M250 120 L180 160 L140 300 L200 300 L200 520 L300 520 L300 300 L360 300 L320 160 L250 120Z" fill="${mockup.bg}" stroke="${textColor}15" stroke-width="1.5"/>
+      <path d="M250 120 C220 130 200 155 195 180" fill="none" stroke="${textColor}20" stroke-width="1"/>
+      <path d="M250 120 C280 130 300 155 305 180" fill="none" stroke="${textColor}20" stroke-width="1"/>` ,
+    hoodie: `<path d="M240 100 L170 145 L120 300 L190 300 L190 520 L310 520 L310 300 L380 300 L330 145 L260 100Z" fill="${mockup.bg}" stroke="${textColor}15" stroke-width="1.5"/>
+      <path d="M240 100 L230 80 L270 80 L260 100" fill="${mockup.bg}" stroke="${textColor}15" stroke-width="1.5"/>
+      <rect x="220" y="340" width="60" height="50" rx="5" fill="${textColor}08" stroke="${textColor}15" stroke-width="0.8"/>`,
+    sweatshirt: `<path d="M250 120 L180 155 L140 300 L200 300 L200 520 L300 520 L300 300 L360 300 L320 155 L250 120Z" fill="${mockup.bg}" stroke="${textColor}15" stroke-width="1.5"/>
+      <path d="M220 120 C235 135 250 140 280 120" fill="none" stroke="${textColor}20" stroke-width="1"/>`,
+    tote: `<path d="M170 180 L170 480 L330 480 L330 180Z" fill="${mockup.bg}" stroke="#33333315" stroke-width="1.5"/>
+      <path d="M210 180 C210 130 290 130 290 180" fill="none" stroke="#33333330" stroke-width="2.5"/>
+      <line x1="170" y1="200" x2="330" y2="200" stroke="#33333310" stroke-width="0.8"/>`,
+    mug: `<rect x="160" y="200" width="140" height="200" rx="8" fill="${mockup.bg}" stroke="#33333315" stroke-width="1.5"/>
+      <path d="M300 250 C350 250 350 350 300 350" fill="none" stroke="#33333325" stroke-width="3"/>
+      <ellipse cx="230" cy="200" rx="70" ry="12" fill="${mockup.bg}" stroke="#33333315" stroke-width="1"/>
+      <ellipse cx="230" cy="200" rx="58" ry="8" fill="#00000008"/>`,
+    phone: `<rect x="180" y="100" width="140" height="320" rx="20" fill="${mockup.bg}" stroke="${textColor}20" stroke-width="2"/>
+      <rect x="195" y="115" width="110" height="270" rx="4" fill="${textColor}10"/>
+      <circle cx="250" cy="405" r="4" fill="${textColor}15"/>
+      <rect x="220" y="107" width="60" height="4" rx="2" fill="${textColor}15"/>`,
+    cap: `<path d="M150 300 C150 220 200 170 250 170 C300 170 350 220 350 300Z" fill="${mockup.bg}" stroke="${textColor}15" stroke-width="1.5"/>
+      <path d="M140 300 C140 305 360 305 360 300" fill="none" stroke="${textColor}20" stroke-width="2"/>
+      <path d="M150 300 C120 310 100 330 140 340 L360 340 C400 330 380 310 350 300" fill="${mockup.bg}" stroke="${textColor}12" stroke-width="1"/>`,
+    poster: `<rect x="150" y="100" width="200" height="340" fill="${mockup.bg}" stroke="${textColor}15" stroke-width="1.5"/>
+      <rect x="170" y="120" width="160" height="200" fill="${textColor}08" stroke="${textColor}10" stroke-width="0.5"/>
+      <line x1="170" y1="350" x2="330" y2="350" stroke="${textColor}10" stroke-width="0.5"/>
+      <line x1="170" y1="370" x2="280" y2="370" stroke="${textColor}10" stroke-width="0.5"/>
+      <line x1="170" y1="385" x2="250" y2="385" stroke="${textColor}10" stroke-width="0.5"/>`,
+    sticker: `<circle cx="250" cy="310" r="140" fill="${mockup.bg}" stroke="#dddddd" stroke-width="1.5"/>
+      <circle cx="250" cy="310" r="125" fill="none" stroke="#eeeeee" stroke-width="0.5" stroke-dasharray="4 3"/>`,
+    notebook: `<rect x="165" y="120" width="170" height="300" rx="4" fill="${mockup.bg}" stroke="${textColor}20" stroke-width="1.5"/>
+      <line x1="185" y1="120" x2="185" y2="420" stroke="${textColor}15" stroke-width="1"/>
+      <rect x="195" y="140" width="120" height="2" rx="1" fill="${textColor}12"/>
+      <rect x="195" y="155" width="90" height="2" rx="1" fill="${textColor}10"/>
+      <rect x="195" y="170" width="105" height="2" rx="1" fill="${textColor}10"/>`,
+    cushion: `<rect x="150" y="160" width="200" height="220" rx="24" fill="${mockup.bg}" stroke="#33333312" stroke-width="1.5"/>
+      <path d="M155 175 C180 165 320 165 345 175" fill="none" stroke="#33333308" stroke-width="1"/>
+      <path d="M155 365 C180 375 320 375 345 365" fill="none" stroke="#33333308" stroke-width="1"/>`,
+    onesie: `<path d="M220 120 L200 140 L170 250 L190 250 L185 400 L315 400 L310 250 L330 250 L300 140 L280 120Z" fill="${mockup.bg}" stroke="#33333312" stroke-width="1.5"/>
+      <path d="M230 120 C240 130 260 130 270 120" fill="none" stroke="#33333315" stroke-width="1"/>
+      <circle cx="250" cy="380" r="3" fill="#33333315"/>
+      <circle cx="250" cy="360" r="3" fill="#33333315"/>`,
+  };
+
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 620" width="600" height="740">
+    <rect width="500" height="620" fill="${mockup.bg}"/>
+    <defs>
+      <radialGradient id="glow" cx="50%" cy="40%" r="50%">
+        <stop offset="0%" stop-color="${accentColor}" stop-opacity="0.08"/>
+        <stop offset="100%" stop-color="${accentColor}" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <rect width="500" height="620" fill="url(#glow)"/>
+    ${shapes[mockup.shape] || shapes.tshirt}
+    <text x="250" y="290" text-anchor="middle" font-family="system-ui,-apple-system,sans-serif" font-size="22" font-weight="700" fill="${accentColor}" letter-spacing="2">${designShort.toUpperCase()}</text>
+    <text x="250" y="320" text-anchor="middle" font-family="system-ui,-apple-system,sans-serif" font-size="11" fill="${textColor}80" letter-spacing="3">${mockup.label.toUpperCase()}</text>
+  </svg>`;
+
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+}
+
+const collectionImages: Record<string, string> = {
+  "essentials": "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=1200&h=600&fit=crop&crop=center",
+  "new-drops": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&h=600&fit=crop&crop=center",
+  "minimal": "https://images.unsplash.com/photo-1493655185874-a03e77f7bf73?w=1200&h=600&fit=crop&crop=center",
+  "street-culture": "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=1200&h=600&fit=crop&crop=center",
+  "design-stories": "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=1200&h=600&fit=crop&crop=center",
+  "best-sellers": "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=1200&h=600&fit=crop&crop=center",
+};
+
+const blogImages: Record<string, string> = {
+  "design-identity": "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=1200&h=600&fit=crop&crop=center",
+  "design-process": "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=1200&h=600&fit=crop&crop=center",
+  "minimal-wardrobe": "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=1200&h=600&fit=crop&crop=center",
+  "hoodie-styling": "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=1200&h=600&fit=crop&crop=center",
+  "t-shirt-fit": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=1200&h=600&fit=crop&crop=center",
+  "print-quality": "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1200&h=600&fit=crop&crop=center",
+  "t-shirt-vs-sweatshirt": "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=1200&h=600&fit=crop&crop=center",
+  "apparel-care": "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1200&h=600&fit=crop&crop=center",
+  "gift-ideas": "https://images.unsplash.com/photo-1549465220-1a8b9238f4d1?w=1200&h=600&fit=crop&crop=center",
+  "minimal-fashion": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1200&h=600&fit=crop&crop=center",
+  "organic-cotton": "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=1200&h=600&fit=crop&crop=center",
+  "minimalist-gift": "https://images.unsplash.com/photo-1512909006721-3d6018887383?w=1200&h=600&fit=crop&crop=center",
+};
+
 export function designPlaceholder(name: string, _hue: number = 0): string {
-  // Use a stable seed derived from the design name
-  const seed = name.toLowerCase().replace(/\s+/g, "-");
-  return `https://picsum.photos/seed/${seed}/800/800`;
+  const slug = name.toLowerCase().replace(/\s+/g, "-");
+  return designImages[slug] || `https://picsum.photos/seed/${slug}/800/800`;
 }
 
 export function productPlaceholder(type: string, designName: string): string {
-  // Combine design + type for a unique but stable image per product
-  const seed = `${designName.toLowerCase().replace(/\s+/g, "-")}-${type}`;
-  return `https://picsum.photos/seed/${seed}/600/600`;
+  return productSvgDataUri(type, designName);
 }
 
 export function collectionPlaceholder(name: string): string {
-  const seed = `col-${name.toLowerCase().replace(/\s+/g, "-")}`;
-  return `https://picsum.photos/seed/${seed}/1200/600`;
+  const slug = name.toLowerCase().replace(/\s+/g, "-");
+  return collectionImages[slug] || `https://picsum.photos/seed/col-${slug}/1200/600`;
+}
+
+export function blogPlaceholder(name: string): string {
+  const slug = name.toLowerCase().replace(/\s+/g, "-");
+  return blogImages[slug] || `https://picsum.photos/seed/blog-${slug}/1200/600`;
 }
 
 // --- Color palettes ---
@@ -416,7 +545,7 @@ export const blogPosts: BlogPost[] = [
     slug: "art-of-wearing-what-you-believe",
     excerpt: "How visual design becomes part of modern personal identity — and why what you wear says more about you than you think.",
     content: "",
-    image: collectionPlaceholder("Design Identity"),
+    image: blogPlaceholder("Design Identity"),
     author: "FAYANITY Studio",
     date: "2026-08-20",
     readTime: "6 min read",
@@ -429,7 +558,7 @@ export const blogPosts: BlogPost[] = [
     slug: "behind-design-midnight-lion",
     excerpt: "The creative process behind our signature design — from initial sketch to final product.",
     content: "",
-    image: collectionPlaceholder("Design Process"),
+    image: blogPlaceholder("Design Process"),
     author: "FAYANITY Studio",
     date: "2026-08-12",
     readTime: "4 min read",
@@ -442,7 +571,7 @@ export const blogPosts: BlogPost[] = [
     slug: "build-minimal-everyday-wardrobe",
     excerpt: "A curated approach to building a wardrobe that works harder with fewer, better pieces.",
     content: "",
-    image: collectionPlaceholder("Minimal Wardrobe"),
+    image: blogPlaceholder("Minimal Wardrobe"),
     author: "FAYANITY Team",
     date: "2026-08-05",
     readTime: "7 min read",
@@ -455,7 +584,7 @@ export const blogPosts: BlogPost[] = [
     slug: "style-oversized-hoodie",
     excerpt: "From street-style to smart-casual — five ways to make an oversized hoodie work for any occasion.",
     content: "",
-    image: collectionPlaceholder("Hoodie Styling"),
+    image: blogPlaceholder("Hoodie Styling"),
     author: "FAYANITY Team",
     date: "2026-07-28",
     readTime: "5 min read",
@@ -468,7 +597,7 @@ export const blogPosts: BlogPost[] = [
     slug: "choose-right-tshirt-fit",
     excerpt: "Understanding the difference between slim, regular, and oversized fits — and which one suits you best.",
     content: "",
-    image: collectionPlaceholder("T-Shirt Fit"),
+    image: blogPlaceholder("T-Shirt Fit"),
     author: "FAYANITY Team",
     date: "2026-07-20",
     readTime: "4 min read",
@@ -481,7 +610,7 @@ export const blogPosts: BlogPost[] = [
     slug: "story-behind-print-quality",
     excerpt: "From archival inks to precision printing — why our prints look as good after 50 washes as they do on day one.",
     content: "",
-    image: collectionPlaceholder("Print Quality"),
+    image: blogPlaceholder("Print Quality"),
     author: "FAYANITY Studio",
     date: "2026-07-15",
     readTime: "5 min read",
@@ -494,7 +623,7 @@ export const blogPosts: BlogPost[] = [
     slug: "tshirt-vs-sweatshirt",
     excerpt: "A practical guide to choosing between two wardrobe staples — fit, fabric, and occasion.",
     content: "",
-    image: collectionPlaceholder("T-Shirt vs Sweatshirt"),
+    image: blogPlaceholder("T-Shirt vs Sweatshirt"),
     author: "FAYANITY Team",
     date: "2026-07-08",
     readTime: "4 min read",
@@ -507,7 +636,7 @@ export const blogPosts: BlogPost[] = [
     slug: "care-for-printed-apparel",
     excerpt: "Simple steps to keep your printed t-shirts, hoodies, and sweatshirts looking fresh for years.",
     content: "",
-    image: collectionPlaceholder("Apparel Care"),
+    image: blogPlaceholder("Apparel Care"),
     author: "FAYANITY Team",
     date: "2026-07-01",
     readTime: "3 min read",
@@ -520,7 +649,7 @@ export const blogPosts: BlogPost[] = [
     slug: "gift-ideas-design-lovers",
     excerpt: "Thoughtful, design-led gifts for the creative people in your life — from mugs to hoodies.",
     content: "",
-    image: collectionPlaceholder("Gift Ideas"),
+    image: blogPlaceholder("Gift Ideas"),
     author: "FAYANITY Team",
     date: "2026-06-25",
     readTime: "5 min read",
@@ -533,7 +662,7 @@ export const blogPosts: BlogPost[] = [
     slug: "minimal-design-modern-fashion",
     excerpt: "Why minimal, clean design continues to dominate contemporary fashion — and how to wear it.",
     content: "",
-    image: collectionPlaceholder("Minimal Fashion"),
+    image: blogPlaceholder("Minimal Fashion"),
     author: "FAYANITY Studio",
     date: "2026-06-18",
     readTime: "6 min read",
@@ -546,7 +675,7 @@ export const blogPosts: BlogPost[] = [
     slug: "understanding-organic-cotton",
     excerpt: "What makes organic cotton different, why we use it, and how it benefits both you and the environment.",
     content: "",
-    image: collectionPlaceholder("Organic Cotton"),
+    image: blogPlaceholder("Organic Cotton"),
     author: "FAYANITY Team",
     date: "2026-06-10",
     readTime: "5 min read",
@@ -559,7 +688,7 @@ export const blogPosts: BlogPost[] = [
     slug: "gift-guide-minimalist",
     excerpt: "Clean, intentional, and beautifully designed — the perfect gifts for people who value simplicity.",
     content: "",
-    image: collectionPlaceholder("Minimalist Gift"),
+    image: blogPlaceholder("Minimalist Gift"),
     author: "FAYANITY Team",
     date: "2026-06-03",
     readTime: "4 min read",
