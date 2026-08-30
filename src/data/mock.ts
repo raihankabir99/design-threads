@@ -1,31 +1,21 @@
 import type { Design, Product, Collection, BlogPost, ProductType, ProductColor } from "./types";
 
-// --- Placeholder image generators ---
-export function designPlaceholder(name: string, hue: number = 0): string {
-  return `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800"><rect fill="#111" width="800" height="800"/><text x="400" y="380" text-anchor="middle" fill="#c9a96e" font-family="serif" font-size="72" font-weight="bold" opacity="0.9">${name.split(" ").map((w,i) => `<tspan x="400" dy="${i === 0 ? 0 : 90}">${w}</tspan>`).join("")}</text><text x="400" y="540" text-anchor="middle" fill="#555" font-family="sans-serif" font-size="14" letter-spacing="6">FAYANITY</text></svg>`)}`;
+// --- Demo image generators using Picsum (free, fast, deterministic) ---
+export function designPlaceholder(name: string, _hue: number = 0): string {
+  // Use a stable seed derived from the design name
+  const seed = name.toLowerCase().replace(/\s+/g, "-");
+  return `https://picsum.photos/seed/${seed}/800/800`;
 }
 
 export function productPlaceholder(type: string, designName: string): string {
-  const labels: Record<string, string> = {
-    "t-shirt": "Tee",
-    "hoodie": "Hoodie",
-    "sweatshirt": "Sweat",
-    "tote-bag": "Tote",
-    "mug": "Mug",
-    "phone-case": "Phone",
-    "cap": "Cap",
-    "poster": "Poster",
-    "sticker": "Sticker",
-    "notebook": "Notebook",
-    "cushion": "Cushion",
-    "kids-t-shirt": "Kids",
-    "baby-onesie": "Baby",
-  };
-  return `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600"><rect fill="#161616" width="600" height="600" rx="4"/><rect fill="#1e1e1e" x="150" y="120" width="300" height="300" rx="8"/><text x="300" y="275" text-anchor="middle" fill="#c9a96e" font-family="serif" font-size="36" opacity="0.7">${designName}</text><text x="300" y="320" text-anchor="middle" fill="#555" font-family="sans-serif" font-size="13" letter-spacing="4">${labels[type] || type}</text></svg>`)}`;
+  // Combine design + type for a unique but stable image per product
+  const seed = `${designName.toLowerCase().replace(/\s+/g, "-")}-${type}`;
+  return `https://picsum.photos/seed/${seed}/600/600`;
 }
 
 export function collectionPlaceholder(name: string): string {
-  return `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#111"/><stop offset="100%" stop-color="#1a1a1a"/></linearGradient></defs><rect fill="url(#g)" width="1200" height="600"/><text x="600" y="280" text-anchor="middle" fill="#c9a96e" font-family="serif" font-size="56" font-weight="bold" opacity="0.8">${name}</text><text x="600" y="360" text-anchor="middle" fill="#555" font-family="sans-serif" font-size="13" letter-spacing="8">COLLECTION</text></svg>`)}`;
+  const seed = `col-${name.toLowerCase().replace(/\s+/g, "-")}`;
+  return `https://picsum.photos/seed/${seed}/1200/600`;
 }
 
 // --- Color palettes ---
