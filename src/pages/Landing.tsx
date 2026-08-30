@@ -4,7 +4,7 @@ import { SiteLayout } from "@/components/layout/SiteLayout";
 import { DesignCard } from "@/components/brand/DesignCard";
 import { ProductCard } from "@/components/brand/ProductCard";
 import { AuroraBackground } from "@/components/brand/AuroraBackground";
-import { designs, collections, products, blogPosts, getFeaturedDesigns, getBestsellerDesigns, productPlaceholder } from "@/data/mock";
+import { designs, collections, products, blogPosts, getFeaturedDesigns, getBestsellerDesigns, productPlaceholder, heroLifestyleImage } from "@/data/mock";
 
 /* ─────────────────────────────────────────────
    HERO
@@ -65,8 +65,8 @@ function HeroSection() {
             <div className="relative">
               <div className="aspect-[4/5] rounded-sm overflow-hidden bg-surface">
                 <img
-                  src={designs[0].heroImage}
-                  alt={designs[0].name}
+                  src={heroLifestyleImage}
+                  alt="FAYANITY — Midnight Lion collection"
                   className="w-full h-full object-cover"
                 />
               </div>
