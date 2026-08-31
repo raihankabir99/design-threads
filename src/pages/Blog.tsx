@@ -236,7 +236,7 @@ export default function Blog() {
             <p className="text-sm text-muted-foreground mb-8 leading-relaxed">
               New designs, stories, and selected inspiration — delivered occasionally.
             </p>
-            <form className="flex gap-2 max-w-md mx-auto" onSubmit={(e) => e.preventDefault()}>
+            <form className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto" onSubmit={(e) => e.preventDefault()}>
               <input
                 type="email"
                 placeholder="Your email address"

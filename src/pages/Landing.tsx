@@ -678,7 +678,7 @@ function NewsletterSection() {
             Discover new designs, collections, and special releases.
           </p>
           <form
-            className="flex gap-2 max-w-md mx-auto"
+            className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto"
             onSubmit={(e) => e.preventDefault()}
           >
             <input
@@ -688,7 +688,7 @@ function NewsletterSection() {
             />
             <button
               type="submit"
-              className="h-12 px-6 bg-gold text-background text-sm font-medium tracking-wide rounded-sm hover:bg-gold-light transition-colors flex items-center gap-2 shrink-0"
+              className="h-12 px-6 bg-gold text-background text-sm font-medium tracking-wide rounded-sm hover:bg-gold-light transition-colors flex items-center justify-center gap-2 shrink-0 min-h-[44px]"
             >
               Subscribe
               <ArrowRight className="h-3.5 w-3.5" />
