@@ -160,16 +160,8 @@
   background: #555;
 }
 
-/* Smooth image loading — only on load, not on every scroll frame */
+/* All images visible by default — browser handles lazy loading natively */
 img {
-  opacity: 1;
-}
-img[loading="lazy"] {
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-img[loading="lazy"].loaded,
-img:not([loading="lazy"]) {
   opacity: 1;
 }
 
